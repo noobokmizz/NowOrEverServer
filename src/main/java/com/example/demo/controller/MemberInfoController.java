@@ -3,9 +3,12 @@ package com.example.demo.controller;
 
 import com.example.demo.mapper.MemberInfoMapper;
 import com.example.demo.model.MemberInfo;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Random;
+
+import java.lang.reflect.Member;
+import java.util.*;
 
 //Spring Framework 는 annotation 기반
 //RestController 라는 annotation 을 선언하여 Spring Framework 이 알아서 이 클래스를 Controller 로 인식
@@ -38,11 +41,11 @@ public class MemberInfoController { //강의에서 UserProfileController 클래�
     //path 에는 대게 한가지~두가지 Parameter 사용하고,
     //RequestParam 이라는 Annotation 으로 http protocol parameter 로 데이터를 전송하는게 일반적
     @PostMapping("/user/{mem_email}") //데이터를 생성하는 API
-    public void postMemberInfo(@PathVariable("mem_email") String mem_email, @RequestParam("mem_password") String mem_password){
+    public void postMemberInfo(@PathVariable("mem_email") String mem_email, @RequestParam("mem_name") String mem_name, @RequestParam("mem_age") int mem_age, @RequestParam("mem_address") String mem_address, @RequestParam("mem_password") String mem_password){
         long seed = System.nanoTime(); //난수 seed 설정
         Random rand = new Random(seed);
         int mem_id = rand.nextInt(2147483646); //mem_id는 랜덤하게 생성
-        mapper.insertMemberInfo(mem_id, mem_email, mem_password);
+        mapper.insertMemberInfo(mem_id, mem_name, mem_age ,mem_email, mem_address ,mem_password);
     }
 
     @PutMapping("/user/{mem_email}") //데이터를 수정하는 API
@@ -53,5 +56,43 @@ public class MemberInfoController { //강의에서 UserProfileController 클래�
     @DeleteMapping("/user/{mem_email}") //데이터를 삭제할 API
     public void deleteMemberInfo(@PathVariable("mem_email") String mem_email){
         mapper.deleteMemberInfo(mem_email);
+    }
+
+
+    //UI에 있는 /api/user/login API 구현해보기
+    @GetMapping("/api/user/login")
+    public JSONObject getLoginMemberInfo(@RequestParam("mem_email") String mem_email, @RequestParam("mem_password")String mem_password) {
+        //System.out.print(mem_email);
+        //System.out.print(mem_password);
+        MemberInfo memberInfo = mapper.getLoginMemberInfo(mem_email,mem_password);
+
+        JSONObject jsonObject = new JSONObject();
+        JSONObject data = new JSONObject();
+
+        if (memberInfo == null){ //존재하지 않는 email 을 입력했을때
+            jsonObject.put("status", "failed");
+            jsonObject.put("data",data);
+            jsonObject.put("msg","No UserId / Password Found");
+
+            return jsonObject;
+        }
+
+
+        jsonObject.put("status", "success"); //status pair 만드는 부분
+
+
+        data.put("name", memberInfo.getMem_name());
+        data.put("age", memberInfo.getMem_age());
+        data.put("email", memberInfo.getMem_email());
+        data.put("address", memberInfo.getMem_address());
+        data.put("password", memberInfo.getMem_password());
+
+        //JSONArray req_array = new JSONArray();
+        //req_array.add(data); // <String,Array> 이므로 JSONArray 이용
+        jsonObject.put("data", data); //member pair 만드는 부분
+
+        jsonObject.put("msg",""); //msg pair 만드는 부분
+
+        return jsonObject; //json 리턴
     }
 }

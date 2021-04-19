@@ -19,8 +19,8 @@ public interface MemberInfoMapper {
     @Select("SELECT * FROM member")
     List<MemberInfo> getMemberInfoList();
 
-    @Insert("INSERT INTO member VALUES(#{mem_id}, #{mem_email}, #{mem_password})")
-    int insertMemberInfo(@Param("mem_id") int mem_id, @Param("mem_email") String mem_email, @Param("mem_password") String password);
+    @Insert("INSERT INTO member VALUES(#{mem_id}, #{mem_name}, #{mem_age}, #{mem_email}, #{mem_address}, #{mem_password})")
+    int insertMemberInfo(@Param("mem_id") int mem_id, @Param("mem_name") String mem_name, @Param("mem_age") int mem_age,  @Param("mem_email") String mem_email, @Param("mem_address") String mem_address, @Param("mem_password") String password);
 
     @Update("UPDATE member SET mem_email=#{mem_email}, mem_password=#{mem_password} WHERE mem_email=#{mem_email}")
     int updateMemberInfo(@Param("mem_email") String mem_email, @Param("mem_password") String password);
@@ -28,4 +28,8 @@ public interface MemberInfoMapper {
     @Delete("DELETE FROM member WHERE mem_email=#{mem_email}")
     int deleteMemberInfo(@Param("mem_email") String mem_email);
     //mapping한 sql문에 의해서 적용된(또는 영향을 받은) 데이터의 개수를 리턴하기 때문에 반환형이 integer
+
+    //UI에 있는 /api/user/login API 구현해보기
+    @Select("SELECT * FROM member WHERE mem_email=#{mem_email} AND mem_password=#{mem_password}")
+    MemberInfo getLoginMemberInfo(@Param("mem_email") String mem_email, @Param("mem_password") String mem_password);
 }

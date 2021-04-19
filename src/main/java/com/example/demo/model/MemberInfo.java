@@ -7,17 +7,24 @@ import java.util.Random;
 
 public class MemberInfo { // 강의에서 UserProfile 클래스
     private int mem_id;
+    //private String mem_name;
+    private String mem_name;
+    private int mem_age;
     private String mem_email;
+    private String mem_address;
     private String mem_password;
     // 안드로이드 앱 개발에선 클래스의 멤버 변수를 public 으로 선언고 외부 클래스에서 바로 멤버변수로 접근하는 것이 일반적이지만
     // 서버 어플리케이션을 개발할때는 멤버 변수를 private 으로 선언하고 Getter,Setter 함수를 정의하는게 일반적인 관례
 
-    public MemberInfo(String mem_email, String mem_password){
+    public MemberInfo(Integer mem_age, String mem_name, String mem_email, String mem_address, String mem_password) {
         super();
         long seed = System.nanoTime(); //난수 seed 설정
         Random rand = new Random(seed);
         this.mem_id = rand.nextInt(2147483646); //mem_id는 랜덤하게 생성
+        this.mem_name = mem_name;
+        this.mem_age = mem_age;
         this.mem_email = mem_email;
+        this.mem_address = mem_address;
         this.mem_password = mem_password;
     }
 
@@ -29,12 +36,36 @@ public class MemberInfo { // 강의에서 UserProfile 클래스
         this.mem_id = mem_id;
     }
 
+    public String getMem_name() {
+        return mem_name;
+    }
+
+    public void setMem_name(String mem_name) {
+        this.mem_name = mem_name;
+    }
+
+    public Integer getMem_age() {
+        return mem_age;
+    }
+
+    public void setMem_age(Integer mem_age) {
+        this.mem_age = mem_age;
+    }
+
     public String getMem_email() {
         return mem_email;
     }
 
     public void setMem_email(String mem_email) {
         this.mem_email = mem_email;
+    }
+
+    public String getMem_address() {
+        return mem_address;
+    }
+
+    public void setMem_address(String mem_address) {
+        this.mem_address = mem_address;
     }
 
     public String getMem_password() {
