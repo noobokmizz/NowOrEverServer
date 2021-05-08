@@ -32,4 +32,8 @@ public interface MemberInfoMapper {
     //UI에 있는 /api/user/login API 구현해보기
     @Select("SELECT * FROM member WHERE mem_email=#{mem_email} AND mem_password=#{mem_password}")
     MemberInfo getLoginMemberInfo(@Param("mem_email") String mem_email, @Param("mem_password") String mem_password);
+
+    //UI에 있는 /api/user/register API 구현해보기
+    @Insert("INSERT INTO member VALUES(#{mem_id}, #{mem_name}, #{mem_age}, #{mem_email}, #{mem_address}, #{mem_password})")
+    int getRegisterMemberInfo(@Param("mem_id") int mem_id, @Param("mem_name") String mem_name, @Param("mem_age") int mem_age,  @Param("mem_email") String mem_email, @Param("mem_address") String mem_address, @Param("mem_password") String password);
 }

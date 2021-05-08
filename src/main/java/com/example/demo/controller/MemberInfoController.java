@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 // controller : client app 의 API 요청을 처리하는 것
 
+import com.example.demo.domain.SignupVO;
 import com.example.demo.domain.UserVO;
 import com.example.demo.mapper.MemberInfoMapper;
 import com.example.demo.model.MemberInfo;
@@ -107,5 +108,20 @@ public class MemberInfoController { //강의에서 UserProfileController 클래�
         jsonObject.put("msg",""); //msg pair 만드는 부분
 
         return jsonObject; //json 리턴
+    }
+
+    @RequestMapping(value = "/api/user/register", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public JSONObject getSignupMemberInfo(@RequestBody SignupVO signupVO){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status", 1);
+
+        System.out.println(signupVO.getMem_email());
+        long seed = System.nanoTime(); //난수 seed 설정
+        Random rand = new Random(seed);
+        int mem_id = rand.nextInt(2147483646); //mem_id는 랜덤하게 생성
+        String mem_address = "temporarily address";
+        mapper.getRegisterMemberInfo(mem_id, signupVO.getMem_name(), signupVO.getMem_age(), signupVO.getMem_email(), mem_address, signupVO.getMem_password());
+
+        return jsonObject;
     }
 }
