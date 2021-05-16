@@ -32,7 +32,6 @@ public class MemberInfo { // 강의에서 UserProfile 클래스
         this.mem_username = mem_username;
         this.mem_birthday = mem_birthday;
         this.mem_email = mem_email;
-        // this.mem_address = mem_address;
         // this.mem_address = "default address";
         this.mem_password = mem_password;
     }
