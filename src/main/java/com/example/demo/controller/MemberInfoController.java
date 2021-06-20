@@ -96,7 +96,7 @@ public class MemberInfoController {
 
 
         jsonObject.put("status", 1); //status pair 만드는 부분
-        data.put("mem_idnum", memberInfo.getMem_idnum());
+        data.put("mem_idnum", Integer.toString(memberInfo.getMem_idnum()));
         data.put("name", memberInfo.getMem_username());
         data.put("age", memberInfo.getMem_birthday());
         data.put("email", memberInfo.getMem_email());
@@ -171,7 +171,7 @@ public class MemberInfoController {
     // 버킷리스트 내의 활동 목록 반환 api
     @RequestMapping(value = "/api/bucketlist/list", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public JSONObject getBucketListContentList(@RequestBody MemberIDnumVO memberIDnumVO){ // 클라이언트에게 mem_idnum을 받아옴
-        int mem_idnum = memberIDnumVO.getMem_idnum();
+        int mem_idnum = Integer.parseInt(memberIDnumVO.getMem_idnum());
 
         JSONObject jsonRet = new JSONObject();
 
@@ -268,15 +268,26 @@ public class MemberInfoController {
     // DB에 접근해서 버킷리스트에 새로운 활동을 담을 api
     @RequestMapping(value = "/api/bucketlist/add", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public JSONObject putCategoryContent(@RequestBody BucketlistContentVO bucketlistContentVO) {
-        int bk_id = mapper.getBucktlistID(bucketlistContentVO.getMem_idnum());
+        int id_num = Integer.parseInt(bucketlistContentVO.getMem_idnum());
+        int bk_id = mapper.getBucktlistID(id_num);
         String lc_id = bucketlistContentVO.getLc_id();
         if (lc_id.equals("")) lc_id = "-1"; // lc_id가 -1이면 원하는 장소는 없고 카테고리만 선택
-        mapper.putBuecketlistCont(bk_id, bucketlistContentVO.getCs_id(), lc_id, bucketlistContentVO.getMem_idnum());
+        mapper.putBuecketlistCont(bk_id, bucketlistContentVO.getCs_id(), lc_id, id_num);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status", 1); // 제대로 데이터베이스에 넣는걸 성공했으면 1을 담고 클라이언트에게 반환
 
         return jsonObject;
+    }
+
+    //Degree to Radian
+    private static double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    // Radian to Degree
+    private static double rad2deg(double rad) {
+        return (rad * 180 / Math.PI);
     }
 
     // 일정 거리 내에 있는 활동들의 정보를 반환할 api
@@ -288,7 +299,7 @@ public class MemberInfoController {
         JSONObject jsonObject = new JSONObject();
 
         // user의 고유 id를 가져옴
-        int mem_idnum = bucketlistRecContentVO.getMem_idnum();
+        int mem_idnum = Integer.parseInt(bucketlistRecContentVO.getMem_idnum());
 
         JSONObject jsonArray = new JSONObject();
         // 아이디가 mem_idnum인 유저가 소유한 버킷리스트의 id 가져오기
@@ -299,9 +310,18 @@ public class MemberInfoController {
         for(int i = 0; i < BucketlistContentList.size(); i++){
             String lc_id = BucketlistContentList.get(i).getLc_id();
             LocationInfo locationInfo = mapper.getLocationInfo(lc_id);
-            double dis = (Math.pow(cur_x - Double.parseDouble(locationInfo.getLc_x()), 2) +
-            Math.pow(cur_y - Double.parseDouble(locationInfo.getLc_y()), 2));
-            System.out.println(dis);
+
+            double theta = cur_x - Double.parseDouble(locationInfo.getLc_x());
+            double dist = Math.sin(deg2rad(cur_y)) * Math.sin(deg2rad(Double.parseDouble(locationInfo.getLc_y()))) +
+                    Math.cos(deg2rad(cur_y)) * Math.cos(deg2rad(Double.parseDouble(locationInfo.getLc_y())) *
+                            Math.cos(deg2rad(theta)));
+
+            dist = Math.acos(dist);
+            dist = rad2deg(dist);
+            dist = dist * 60 * 1.1515;
+            dist = dist * 1609.344; // convert to Metric
+
+            System.out.println(dist);
 
         }
 
