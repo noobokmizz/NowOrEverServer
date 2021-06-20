@@ -55,7 +55,7 @@ public interface MemberInfoMapper {
     @Select("SELECT * FROM BucketlistCont WHERE bk_id=#{bk_id} and lc_id=-1")
     List<BucketlistContent> getBucketlistContentListCat(@Param("bk_id") int bk_id);
 
-    // Bucketlist내 활동중 location도 있는 데이터의 목록 가져오기
+    // Bucketlist내 활동중 location까지 있는 데이터의 목록 가져오기
     @Select("SELECT * FROM BucketlistCont WHERE bk_id=#{bk_id} and lc_id!=-1")
     List<BucketlistContent> getBucketlistContentListLoc(@Param("bk_id") int bk_id);
 

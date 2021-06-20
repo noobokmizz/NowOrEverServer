@@ -169,7 +169,7 @@ public class MemberInfoController {
     }
 
     // 버킷리스트 내의 활동 목록 반환 api
-    @RequestMapping(value = "/api/bucketlist/list", method = RequestMethod.GET, produces = "application/json; charset=utf8")
+    @RequestMapping(value = "/api/bucketlist/list", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public JSONObject getBucketListContentList(@RequestBody MemberIDnumVO memberIDnumVO){ // 클라이언트에게 mem_idnum을 받아옴
         int mem_idnum = memberIDnumVO.getMem_idnum();
 
@@ -196,7 +196,7 @@ public class MemberInfoController {
         }
         jsonRet.put("only_category", jsonArray1);
 
-        // mem_idnum인 유저가 소유한 버킷리스트 내의 데이터들 중 category만 있는 데이터를 가져옴
+        // mem_idnum인 유저가 소유한 버킷리스트 내의 데이터들 중 location도 있는 데이터를 가져옴
         BucketlistContentList = mapper.getBucketlistContentListLoc(bk_id);
         JSONArray jsonArray2 = new JSONArray();
 
@@ -229,7 +229,7 @@ public class MemberInfoController {
     }
 
     // 버킷리스트에 활동 추가할 때 카테고리 목록이랑 가게이름 반환해주는 api
-    @RequestMapping(value = "/api/bucketlist/showcategory", method = RequestMethod.GET, produces = "application/json; charset=utf8")
+    @RequestMapping(value = "/api/bucketlist/showcategory", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public JSONObject getCategoryList(@RequestBody MemberIDnumVO memberIDnumVO){
         List<CategoryList> CategoryArr = mapper.getCategoryList();
         JSONObject jsonArray = new JSONObject();
@@ -280,16 +280,31 @@ public class MemberInfoController {
     }
 
     // 일정 거리 내에 있는 활동들의 정보를 반환할 api
-//    @RequestMapping(value = "/api/bucketlist/reclist", method = RequestMethod.POST, produces = "application/json; charset=utf8")
-//    public JSONObject getCategoryRecList(@RequestBody BucketlistRecContentVO bucketlistRecContentVO){
-//        // user의 고유 id를 가져옴
-//        int mem_idnum = bucketlistRecContentVO.getMem_idnum();
-//
-//        JSONObject jsonArray = new JSONObject();
-//        // 아이디가 mem_idnum인 유저가 소유한 버킷리스트의 id 가져오기
-//        int bk_id = mapper.getBucktlistID(mem_idnum);
-//
-//        // mem_idnum인 유저가 소유한 버킷리스트 내의 데이터들을 가져옴
-//        List<BucketlistContent> BucketlistContentList = mapper.getBucketlistContentRecList(bk_id); //구현
-//    }
+    @RequestMapping(value = "/api/bucketlist/reclist", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public JSONObject getCategoryRecList(@RequestBody BucketlistRecContentVO bucketlistRecContentVO){
+        double cur_x = bucketlistRecContentVO.getCur_x();
+        double cur_y = bucketlistRecContentVO.getCur_y();
+
+        JSONObject jsonObject = new JSONObject();
+
+        // user의 고유 id를 가져옴
+        int mem_idnum = bucketlistRecContentVO.getMem_idnum();
+
+        JSONObject jsonArray = new JSONObject();
+        // 아이디가 mem_idnum인 유저가 소유한 버킷리스트의 id 가져오기
+        int bk_id = mapper.getBucktlistID(mem_idnum);
+
+        // mem_idnum인 유저가 소유한 버킷리스트에서 location까지 있는 데이터들을 가져옴
+        List<BucketlistContent> BucketlistContentList = mapper.getBucketlistContentListLoc(bk_id);
+        for(int i = 0; i < BucketlistContentList.size(); i++){
+            String lc_id = BucketlistContentList.get(i).getLc_id();
+            LocationInfo locationInfo = mapper.getLocationInfo(lc_id);
+            double dis = (Math.pow(cur_x - Double.parseDouble(locationInfo.getLc_x()), 2) +
+            Math.pow(cur_y - Double.parseDouble(locationInfo.getLc_y()), 2));
+            System.out.println(dis);
+
+        }
+
+        return jsonObject;
+    }
 }
