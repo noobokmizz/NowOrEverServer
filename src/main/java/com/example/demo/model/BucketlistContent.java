@@ -15,9 +15,6 @@ public class BucketlistContent {
     private int mem_idnum; // 해당 버킷리스트를 소유한 회읜의 id
 
     public BucketlistContent (int bk_id, String cs_id, String lc_id, int mem_idnum) {
-        super();
-        long seed = System.nanoTime(); //난수 seed 설정
-        Random rand = new Random(seed);
         this.bk_id = bk_id;
         this.cs_id = cs_id;
         this.lc_id = lc_id;
