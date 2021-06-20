@@ -280,28 +280,19 @@ public class MemberInfoController {
         return jsonObject;
     }
 
-    //Degree to Radian
-    private static double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-
-    // Radian to Degree
-    private static double rad2deg(double rad) {
-        return (rad * 180 / Math.PI);
-    }
-
     // 일정 거리 내에 있는 활동들의 정보를 반환할 api
     @RequestMapping(value = "/api/bucketlist/reclist", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public JSONObject getCategoryRecList(@RequestBody BucketlistRecContentVO bucketlistRecContentVO){
-        double cur_x = bucketlistRecContentVO.getCur_x();
-        double cur_y = bucketlistRecContentVO.getCur_y();
+        double cur_x = Double.parseDouble(bucketlistRecContentVO.getCur_x());
+        double cur_y = Double.parseDouble(bucketlistRecContentVO.getCur_y());
 
         JSONObject jsonObject = new JSONObject();
 
+        JSONArray jsonArray = new JSONArray();
+        int idx = 0;
         // user의 고유 id를 가져옴
         int mem_idnum = Integer.parseInt(bucketlistRecContentVO.getMem_idnum());
 
-        JSONObject jsonArray = new JSONObject();
         // 아이디가 mem_idnum인 유저가 소유한 버킷리스트의 id 가져오기
         int bk_id = mapper.getBucktlistID(mem_idnum);
 
@@ -311,20 +302,51 @@ public class MemberInfoController {
             String lc_id = BucketlistContentList.get(i).getLc_id();
             LocationInfo locationInfo = mapper.getLocationInfo(lc_id);
 
-            double theta = cur_x - Double.parseDouble(locationInfo.getLc_x());
-            double dist = Math.sin(deg2rad(cur_y)) * Math.sin(deg2rad(Double.parseDouble(locationInfo.getLc_y()))) +
-                    Math.cos(deg2rad(cur_y)) * Math.cos(deg2rad(Double.parseDouble(locationInfo.getLc_y())) *
-                            Math.cos(deg2rad(theta)));
+            System.out.print(locationInfo.getLc_addr());
+            System.out.print("   ");
 
-            dist = Math.acos(dist);
-            dist = rad2deg(dist);
-            dist = dist * 60 * 1.1515;
-            dist = dist * 1609.344; // convert to Metric
+            // 두 위도 경도 간의 거리 구하기
+            double radius = 6371; // 지구 반지름(km)
+            double toRadian = Math.PI / 180;
+            double des_x = Double.parseDouble(locationInfo.getLc_x());
+            double des_y = Double.parseDouble(locationInfo.getLc_y());
 
-            System.out.println(dist);
+            double deltaLatitude = Math.abs(cur_x - des_x) * toRadian;
+            double deltaLongitude = Math.abs(cur_y - des_y) * toRadian;
 
+            double sinDeltaLat = Math.sin(deltaLatitude / 2);
+            double sinDeltaLng = Math.sin(deltaLongitude / 2);
+            double squareRoot = Math.sqrt(
+                    sinDeltaLat * sinDeltaLat +
+                            Math.cos(cur_x * toRadian) * Math.cos(des_x * toRadian) * sinDeltaLng * sinDeltaLng);
+
+            double distance = 2 * radius * Math.asin(squareRoot);
+            distance *= 1000;
+
+            System.out.println(distance);
+
+            if (distance <= 500.0){
+                JSONObject data = new JSONObject();
+
+                CategoryList categoryList = mapper.getCategoryListOneByCs_a(locationInfo.getCs_activity());
+                data.put("cs_id", categoryList.getCs_id());
+                data.put("cs_activity", categoryList.getCs_activity());
+                data.put("cm_activity", categoryList.getCm_activity());
+                data.put("cl_activity", categoryList.getCl_activity());
+
+                data.put("lc_id", lc_id);
+                data.put("lc_addr", locationInfo.getLc_addr());
+                data.put("lc_addr_road", locationInfo.getLc_addr_road());
+                data.put("lc_call_number", locationInfo.getLc_call_number());
+                data.put("lc_url", locationInfo.getLc_url());
+                data.put("lc_photo", locationInfo.getLc_photo());
+                data.put("lc_name", locationInfo.getLc_name());
+
+                jsonArray.add(idx, data);
+                idx += 1;
+            }
         }
-
+        jsonObject.put("location", jsonArray);
         return jsonObject;
     }
 }

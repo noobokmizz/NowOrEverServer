@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class BucketlistRecContentVO extends MemberIDnumVO {
-    private double cur_x;
-    private double cur_y;
+    private String cur_x;
+    private String cur_y;
 }

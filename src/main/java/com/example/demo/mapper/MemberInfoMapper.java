@@ -75,6 +75,10 @@ public interface MemberInfoMapper {
     @Select("SELECT * FROM Category_small WHERE cs_id=#{cs_id}")
     CategoryList getCategoryListOne(@Param("cs_id") String cs_id);
 
+    // 소분류 카테고리에서 Category small로 Category mid와 large도 가져오기
+    @Select("SELECT * FROM Category_small WHERE cs_activity=#{cs_activity}")
+    CategoryList getCategoryListOneByCs_a(@Param("cs_activity") String cs_activity);
+
     // BucketlistCont 테이블에 새로운 활동 추가
     @Insert("INSERT INTO BucketlistCont VALUES(#{bk_id}, #{cs_id}, #{lc_id}, #{mem_idnum})")
     int putBuecketlistCont(@Param("bk_id") int bk_id, @Param("cs_id") String cs_id, @Param("lc_id") String lc_id, @Param("mem_idnum") int mem_idnum);
