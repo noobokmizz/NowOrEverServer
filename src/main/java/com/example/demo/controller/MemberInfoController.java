@@ -1,9 +1,13 @@
 package com.example.demo.controller;
 // controller : client app 의 API 요청을 처리하는 것
 
+import com.example.demo.domain.MemberIDnumVO;
 import com.example.demo.domain.SignupVO;
 import com.example.demo.domain.UserVO;
 import com.example.demo.mapper.MemberInfoMapper;
+import com.example.demo.model.BucketlistContent;
+import com.example.demo.model.BucketlistContent;
+import com.example.demo.model.LocationInfo;
 import com.example.demo.model.MemberInfo;
 import lombok.extern.java.Log;
 import org.json.simple.JSONArray;
@@ -38,7 +42,7 @@ public class MemberInfoController { //강의에서 UserProfileController 클래�
     public MemberInfoController(MemberInfoMapper mapper) {
         this.mapper = mapper;
         //MeberInfoConroller 생성자의 parameter를 MemberInfoMapper로 받겠다고 선언
-        //스프링부트가 알아서 Mapper class를 만들고 그 객체를 MeberInfoController를 생성하면서 생서자로 전달달
+        //스프링부트가 알아서 Mapper class를 만들고 그 객체를 MeberInfoController를 생성하면서 생서자로 전달
     }
 
     //mem_email을 인자로 받아서 해당 데이터를 json 형태로 전달하는 API 생성
@@ -97,7 +101,7 @@ public class MemberInfoController { //강의에서 UserProfileController 클래�
 
 
         jsonObject.put("status", 1); //status pair 만드는 부분
-
+        data.put("mem_idnum", memberInfo.getMem_idnum());
         data.put("name", memberInfo.getMem_username());
         data.put("age", memberInfo.getMem_birthday());
         data.put("email", memberInfo.getMem_email());
@@ -167,5 +171,40 @@ public class MemberInfoController { //강의에서 UserProfileController 클래�
         mapper.getRegisterUserInform(mem_password, mem_profile_content, mem_username, mem_autologin, mem_birthday_open, mem_sex_open, mem_receive_email, mem_receive_sns, mem_open_profile, mem_noti_allow, mem_denied, mem_email_cert, mem_lastlogin_datetime, mem_adminmemo, mem_photo, mem_idnum, mem_userid);
 
         return jsonObject;
+    }
+
+    // 버킷리스트 내의 활동 목록 반환 api
+    @RequestMapping(value = "/api/bucketlist/list", method = RequestMethod.GET, produces = "application/json; charset=utf8")
+    public JSONArray getBucketListContentList(@RequestBody MemberIDnumVO memberIDnumVO){ // 클라이언트에게 mem_idnum을 받아옴
+        int mem_idnum = memberIDnumVO.getMem_idnum();
+
+        JSONArray jsonArray = new JSONArray();
+        // 아이디가 mem_idnum인 유저가 소유한 버킷리스트의 id 가져오기
+        int bk_id = mapper.getBucktlistID(mem_idnum);
+
+        // mem_idnum인 유저가 소유한 버킷리스트 내의 lc_id들을 가져옴
+        List<String> BucketlistContentList = mapper.getBucketlistContentList(bk_id);
+
+
+        // lc_id에 해당하는 장소의 정보를 가져오고 json 포맷으로 리턴
+        for(int i = 0; i < BucketlistContentList.size(); i++) {
+            JSONObject jsonObject = new JSONObject();
+            JSONObject data = new JSONObject();
+
+            LocationInfo locationInfo = mapper.getLocationInfo(BucketlistContentList.get(i));
+
+            jsonObject.put("lc_id", locationInfo.getLc_id());
+            data.put("lc_name", locationInfo.getLc_name());
+            data.put("lc_addr", locationInfo.getLc_addr());
+            data.put("lc_addr_road", locationInfo.getLc_addr_road());
+            data.put("lc_call_number", locationInfo.getLc_call_number());
+            data.put("lc_url", locationInfo.getLc_url());
+            data.put("cs_activity", locationInfo.getCs_activity());
+            jsonObject.put("data", data);
+
+            jsonArray.add(i, jsonObject);
+
+        }
+        return jsonArray;
     }
 }

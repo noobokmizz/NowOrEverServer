@@ -1,4 +1,6 @@
 package com.example.demo.mapper;
+import com.example.demo.model.BucketlistContent;
+import com.example.demo.model.LocationInfo;
 import com.example.demo.model.MemberInfo;
 import org.apache.ibatis.annotations.*;
 
@@ -31,7 +33,7 @@ public interface MemberInfoMapper {
     //mapping한 sql문에 의해서 적용된(또는 영향을 받은) 데이터의 개수를 리턴하기 때문에 반환형이 integer
 
     //UI에 있는 /api/user/login API 구현해보기
-    @Select("SELECT User_unique.mem_userid, mem_username, mem_birthday, mem_email, mem_password FROM User_inform, User_unique WHERE User_unique.mem_userid=#{mem_userid} AND mem_password=#{mem_password} GROUP BY User_unique.mem_userid")
+    @Select("SELECT User_unique.mem_idnum, mem_username, mem_birthday, mem_email, mem_password FROM User_inform, User_unique WHERE User_unique.mem_userid=#{mem_userid} AND mem_password=#{mem_password} GROUP BY User_unique.mem_userid")
     MemberInfo getLoginMemberInfo(@Param("mem_userid") String mem_userid, @Param("mem_password") String mem_password);
 
     //UI에 있는 /api/user/register API 구현해보기
@@ -43,4 +45,17 @@ public interface MemberInfoMapper {
     // User_inform 테이블에 삽입
     @Insert("INSERT INTO User_inform VALUES(#{mem_password}, #{mem_profile_content}, #{mem_username}, #{mem_autologin}, #{mem_birthday_open}, #{mem_sex_open}, #{mem_receive_email}, #{mem_receive_sns}, #{mem_open_profile}, #{mem_noti_allow}, #{mem_denied}, #{mem_email_cert}, #{mem_lastlogin_datetime}, #{mem_adminmemo}, #{mem_photo}, #{mem_idnum}, #{mem_userid})")
     int getRegisterUserInform(@Param("mem_password") String mem_password, @Param("mem_profile_content") String mem_profile_content, @Param("mem_username") String mem_username,  @Param("mem_autologin") Byte mem_autologin, @Param("mem_birthday_open") Byte mem_birthday_open, @Param("mem_sex_open") Byte mem_sex_open, @Param("mem_receive_email") Byte mem_receive_email, @Param("mem_receive_sns") Byte mem_receive_sns, @Param("mem_open_profile") Byte mem_open_profile, @Param("mem_noti_allow") Byte mem_noti_allow, @Param("mem_denied") Byte mem_denied, @Param("mem_email_cert") Byte mem_email_cert, @Param("mem_lastlogin_datetime") Timestamp mem_lastlogin_datetime, @Param("mem_adminmemo") String mem_adminmemo, @Param("mem_photo") String mem_photo, @Param("mem_idnum") int mem_idnum, @Param("mem_userid") String mem_userid);
+
+    // 아이디가 mem_idnum인 유저가 소유한 버킷리스트의 id 가져오기
+    @Select("SELECT bk_id FROM Bucketlist WHERE mem_idnum=#{mem_idnum}")
+    int getBucktlistID(@Param("mem_idnum") int mem_idnum);
+
+    // Bucketlist내의 목록 가져오기
+    @Select("SELECT lc_id FROM BucketlistCont WHERE bk_id=#{bk_id}")
+    List<String> getBucketlistContentList(@Param("bk_id") int bk_id);
+
+    // Location 테이블에서 lc_id에 해당하는 활동을 가져옴
+    @Select("SELECT * FROM Location WHERE lc_id=#{lc_id}")
+    LocationInfo getLocationInfo(@Param("lc_id") String lc_id);
+
 }
