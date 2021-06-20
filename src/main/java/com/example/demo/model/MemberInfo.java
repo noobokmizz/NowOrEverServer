@@ -12,7 +12,7 @@ import java.util.Random;
 
 @Getter
 @Data
-public class MemberInfo { // 강의에서 UserProfile 클래스
+public class MemberInfo {
     private int mem_idnum;
     private String mem_userid;
     private String mem_username;
@@ -20,7 +20,7 @@ public class MemberInfo { // 강의에서 UserProfile 클래스
     private String mem_email;
     private String mem_address;
     private String mem_password;
-    // 안드로이드 앱 개발에선 클래스의 멤버 변수를 public 으로 선언고 외부 클래스에서 바로 멤버변수로 접근하는 것이 일반적이지만
+    // 안드로이드 앱 개발에선 클래스의 멤버 변수를 public 으로 선언하고 외부 클래스에서 바로 멤버변수로 접근하는 것이 일반적이지만
     // 서버 어플리케이션을 개발할때는 멤버 변수를 private 으로 선언하고 Getter,Setter 함수를 정의하는게 일반적인 관례
 
     public MemberInfo(String mem_userid, String mem_username, String mem_birthday, String mem_email, String mem_password) {

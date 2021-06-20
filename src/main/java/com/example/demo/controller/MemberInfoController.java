@@ -5,10 +5,8 @@ import com.example.demo.domain.MemberIDnumVO;
 import com.example.demo.domain.SignupVO;
 import com.example.demo.domain.UserVO;
 import com.example.demo.mapper.MemberInfoMapper;
+import com.example.demo.model.*;
 import com.example.demo.model.BucketlistContent;
-import com.example.demo.model.BucketlistContent;
-import com.example.demo.model.LocationInfo;
-import com.example.demo.model.MemberInfo;
 import lombok.extern.java.Log;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -28,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 
 //Spring Framework 는 annotation 기반
 //RestController 라는 annotation 을 선언하여 Spring Framework 이 알아서 이 클래스를 Controller 로 인식
@@ -205,6 +202,46 @@ public class MemberInfoController { //강의에서 UserProfileController 클래�
             jsonArray.add(i, jsonObject);
 
         }
+        return jsonArray;
+    }
+
+    // 버킷리스트에 활동 추가할 때 카테고리 목록이랑 가게이름 반환해주는 api
+    @RequestMapping(value = "/api/bucketlist/showcategory", method = RequestMethod.GET, produces = "application/json; charset=utf8")
+    public JSONArray getCategoryList(@RequestBody MemberIDnumVO memberIDnumVO){
+        List<CategoryList> CategoryArr = mapper.getCategoryList();
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonInarr1 = new JSONObject();
+        JSONObject jsonInarr2 = new JSONObject();
+        for(int i = 0; i < CategoryArr.size(); i++){
+            JSONObject jsonObject = new JSONObject();
+            JSONObject data = new JSONObject();
+
+            CategoryList categoryList = CategoryArr.get(i);
+            jsonObject.put("cs_id", categoryList.getCs_id());
+            data.put("cl_activity", categoryList.getCl_activity());
+            data.put("cm_activity", categoryList.getCm_activity());
+            data.put("cs_activity", categoryList.getCs_activity());
+            jsonObject.put("Category_list", data);
+
+            jsonInarr1.put(Integer.toString(i), jsonObject);
+        }
+        jsonArray.add(0, jsonInarr1);
+
+        List<LocationInfo> locationInfoList = mapper.getLocationInfoAll();
+        for(int i = 0; i < locationInfoList.size(); i++){
+            JSONObject jsonObject = new JSONObject();
+            JSONObject data = new JSONObject();
+
+            LocationInfo locationInfo = locationInfoList.get(i);
+            jsonObject.put("lc_id", locationInfo.getLc_id());
+            data.put("lc_name",locationInfo.getLc_name());
+            data.put("cs_activity", locationInfo.getCs_activity());
+            jsonObject.put("locationInfo", data);
+
+            jsonInarr2.put(Integer.toString(i), jsonObject);
+        }
+
+        jsonArray.add(1, jsonInarr2);
         return jsonArray;
     }
 }

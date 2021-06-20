@@ -1,7 +1,9 @@
 package com.example.demo.mapper;
 import com.example.demo.model.BucketlistContent;
+import com.example.demo.model.CategoryList;
 import com.example.demo.model.LocationInfo;
 import com.example.demo.model.MemberInfo;
+import jdk.jfr.Category;
 import org.apache.ibatis.annotations.*;
 
 import java.sql.Timestamp;
@@ -37,7 +39,6 @@ public interface MemberInfoMapper {
     MemberInfo getLoginMemberInfo(@Param("mem_userid") String mem_userid, @Param("mem_password") String mem_password);
 
     //UI에 있는 /api/user/register API 구현해보기
-
     // User_unique 테이블에 삽입
     @Insert("INSERT INTO User_unique VALUES(#{mem_idnum}, #{mem_userid}, #{mem_email}, #{mem_nickname}, #{mem_phone}, #{mem_sex}, #{mem_birthday}, #{mem_register_datetime}, #{mem_is_admin}, #{mem_following}, #{mem_followed})")
     int getRegisterUserUnique(@Param("mem_idnum") int mem_idnum, @Param("mem_userid") String mem_userid, @Param("mem_email") String mem_email, @Param("mem_nickname") String nickname, @Param("mem_phone") String mem_phone, @Param("mem_sex") Byte mem_sex, @Param("mem_birthday") String mem_birthday, @Param("mem_register_datetime") Timestamp mem_register_datetime, @Param("mem_is_admin") Byte mem_is_admin, @Param("mem_following") int mem_following, @Param("mem_followed") int mem_followed);
@@ -54,8 +55,17 @@ public interface MemberInfoMapper {
     @Select("SELECT lc_id FROM BucketlistCont WHERE bk_id=#{bk_id}")
     List<String> getBucketlistContentList(@Param("bk_id") int bk_id);
 
-    // Location 테이블에서 lc_id에 해당하는 활동을 가져옴
+    // Location 테이블에서 데이터를 전부 가져옴
+    @Select("SELECT * FROM Location")
+    List<LocationInfo> getLocationInfoAll();
+
+
+    // Location 테이블에서 lc_id에 해당하는 데이터를를 가져
     @Select("SELECT * FROM Location WHERE lc_id=#{lc_id}")
     LocationInfo getLocationInfo(@Param("lc_id") String lc_id);
+
+    // 소분류 카테고리 Category 목록 가져오기
+    @Select("SELECT * FROM Category_small")
+    List<CategoryList> getCategoryList();
 
 }
