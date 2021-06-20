@@ -52,15 +52,14 @@ public interface MemberInfoMapper {
     int getBucktlistID(@Param("mem_idnum") int mem_idnum);
 
     // Bucketlist내의 목록 가져오기
-    @Select("SELECT lc_id FROM BucketlistCont WHERE bk_id=#{bk_id}")
-    List<String> getBucketlistContentList(@Param("bk_id") int bk_id);
+    @Select("SELECT * FROM BucketlistCont WHERE bk_id=#{bk_id}")
+    List<BucketlistContent> getBucketlistContentList(@Param("bk_id") int bk_id);
 
     // Location 테이블에서 데이터를 전부 가져옴
     @Select("SELECT * FROM Location")
     List<LocationInfo> getLocationInfoAll();
 
-
-    // Location 테이블에서 lc_id에 해당하는 데이터를를 가져
+    // Location 테이블에서 lc_id에 해당하는 데이터를를 가져오기
     @Select("SELECT * FROM Location WHERE lc_id=#{lc_id}")
     LocationInfo getLocationInfo(@Param("lc_id") String lc_id);
 
@@ -68,4 +67,11 @@ public interface MemberInfoMapper {
     @Select("SELECT * FROM Category_small")
     List<CategoryList> getCategoryList();
 
+    // 소분류 카테고리에서 특정 Category 목록만 가져오기
+    @Select("SELECT * FROM Category_small WHERE cs_id=#{cs_id}")
+    CategoryList getCategoryListOne(@Param("cs_id") String cs_id);
+
+    // BucketlistCont 테이블에 새로운 활동 추가
+    @Insert("INSERT INTO BucketlistCont VALUES(#{bk_id}, #{cs_id}, #{lc_id}, #{mem_idnum})")
+    int putBuecketlistCont(@Param("bk_id") int bk_id, @Param("cs_id") String cs_id, @Param("lc_id") String lc_id, @Param("mem_idnum") int mem_idnum);
 }
