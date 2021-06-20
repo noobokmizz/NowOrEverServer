@@ -184,7 +184,7 @@ public class MemberInfoController {
         List<BucketlistContent> BucketlistContentList = mapper.getBucketlistContentList(bk_id);
 
 
-        // lc_id에 해당하는 장소의 정보를 가져오고 json 포맷으로 리턴
+        // 위에서 가져온 데이터들을 jsonObject에 넣기
         for(int i = 0; i < BucketlistContentList.size(); i++) {
             JSONObject data = new JSONObject();
 
