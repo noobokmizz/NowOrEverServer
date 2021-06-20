@@ -51,9 +51,13 @@ public interface MemberInfoMapper {
     @Select("SELECT bk_id FROM Bucketlist WHERE mem_idnum=#{mem_idnum}")
     int getBucktlistID(@Param("mem_idnum") int mem_idnum);
 
-    // Bucketlist내의 목록 가져오기
-    @Select("SELECT * FROM BucketlistCont WHERE bk_id=#{bk_id}")
-    List<BucketlistContent> getBucketlistContentList(@Param("bk_id") int bk_id);
+    // Bucketlist내 활동중 category만 있는 데이터의 목록 가져오기
+    @Select("SELECT * FROM BucketlistCont WHERE bk_id=#{bk_id} and lc_id=-1")
+    List<BucketlistContent> getBucketlistContentListCat(@Param("bk_id") int bk_id);
+
+    // Bucketlist내 활동중 location도 있는 데이터의 목록 가져오기
+    @Select("SELECT * FROM BucketlistCont WHERE bk_id=#{bk_id} and lc_id!=-1")
+    List<BucketlistContent> getBucketlistContentListLoc(@Param("bk_id") int bk_id);
 
     // Location 테이블에서 데이터를 전부 가져옴
     @Select("SELECT * FROM Location")

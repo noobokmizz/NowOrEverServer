@@ -1,10 +1,7 @@
 package com.example.demo.controller;
 // controller : client app 의 API 요청을 처리하는 것
 
-import com.example.demo.domain.BucketlistContentVO;
-import com.example.demo.domain.MemberIDnumVO;
-import com.example.demo.domain.SignupVO;
-import com.example.demo.domain.UserVO;
+import com.example.demo.domain.*;
 import com.example.demo.mapper.MemberInfoMapper;
 import com.example.demo.model.*;
 import com.example.demo.model.BucketlistContent;
@@ -176,13 +173,14 @@ public class MemberInfoController {
     public JSONObject getBucketListContentList(@RequestBody MemberIDnumVO memberIDnumVO){ // 클라이언트에게 mem_idnum을 받아옴
         int mem_idnum = memberIDnumVO.getMem_idnum();
 
-        JSONObject jsonArray = new JSONObject();
+        JSONObject jsonRet = new JSONObject();
+
         // 아이디가 mem_idnum인 유저가 소유한 버킷리스트의 id 가져오기
         int bk_id = mapper.getBucktlistID(mem_idnum);
+        JSONArray jsonArray1 = new JSONArray();
 
-        // mem_idnum인 유저가 소유한 버킷리스트 내의 데이터들을 가져옴
-        List<BucketlistContent> BucketlistContentList = mapper.getBucketlistContentList(bk_id);
-
+        // mem_idnum인 유저가 소유한 버킷리스트 내의 데이터들 중 category만 있는 데이터를 가져옴
+        List<BucketlistContent> BucketlistContentList = mapper.getBucketlistContentListCat(bk_id);
 
         // 위에서 가져온 데이터들을 jsonObject에 넣기
         for(int i = 0; i < BucketlistContentList.size(); i++) {
@@ -194,24 +192,40 @@ public class MemberInfoController {
             data.put("cm_activity", categoryList.getCm_activity());
             data.put("cl_activity", categoryList.getCl_activity());
 
-            // Bucketlist에 원하는 장소가 있는 경우 장소 정보도 추가로 jsonobject에 삽입
-            if (!BucketlistContentList.get(i).getLc_id().equals("-1")) {
-                LocationInfo locationInfo = mapper.getLocationInfo(BucketlistContentList.get(i).getLc_id());
-
-                data.put("lc_id", locationInfo.getLc_id());
-                data.put("lc_name", locationInfo.getLc_name());
-                data.put("lc_addr", locationInfo.getLc_addr());
-                data.put("lc_addr_road", locationInfo.getLc_addr_road());
-                data.put("lc_call_number", locationInfo.getLc_call_number());
-                data.put("lc_url", locationInfo.getLc_url());
-                data.put("cs_activity", locationInfo.getCs_activity());
-                data.put("lc_photo", locationInfo.getLc_photo());
-
-            }
-
-            jsonArray.put(Integer.toString(i), data);
+            jsonArray1.add(i, data);
         }
-        return jsonArray;
+        jsonRet.put("only_category", jsonArray1);
+
+        // mem_idnum인 유저가 소유한 버킷리스트 내의 데이터들 중 category만 있는 데이터를 가져옴
+        BucketlistContentList = mapper.getBucketlistContentListLoc(bk_id);
+        JSONArray jsonArray2 = new JSONArray();
+
+        // 위에서 가져온 데이터들을 jsonObject에 넣기
+        for(int i = 0; i < BucketlistContentList.size(); i++) {
+            JSONObject data = new JSONObject();
+
+            CategoryList categoryList = mapper.getCategoryListOne(BucketlistContentList.get(i).getCs_id());
+            data.put("cs_id", BucketlistContentList.get(i).getCs_id());
+            data.put("cs_activity", categoryList.getCs_activity());
+            data.put("cm_activity", categoryList.getCm_activity());
+            data.put("cl_activity", categoryList.getCl_activity());
+
+            LocationInfo locationInfo = mapper.getLocationInfo(BucketlistContentList.get(i).getLc_id());
+
+            data.put("lc_id", locationInfo.getLc_id());
+            data.put("lc_name", locationInfo.getLc_name());
+            data.put("lc_addr", locationInfo.getLc_addr());
+            data.put("lc_addr_road", locationInfo.getLc_addr_road());
+            data.put("lc_call_number", locationInfo.getLc_call_number());
+            data.put("lc_url", locationInfo.getLc_url());
+            data.put("cs_activity", locationInfo.getCs_activity());
+            data.put("lc_photo", locationInfo.getLc_photo());
+
+            jsonArray2.add(i, data);
+        }
+        jsonRet.put("location", jsonArray2);
+
+        return jsonRet;
     }
 
     // 버킷리스트에 활동 추가할 때 카테고리 목록이랑 가게이름 반환해주는 api
@@ -219,20 +233,22 @@ public class MemberInfoController {
     public JSONObject getCategoryList(@RequestBody MemberIDnumVO memberIDnumVO){
         List<CategoryList> CategoryArr = mapper.getCategoryList();
         JSONObject jsonArray = new JSONObject();
-        JSONObject jsonInarr1 = new JSONObject();
-        JSONObject jsonInarr2 = new JSONObject();
+
+        JSONArray jsonInarr1 = new JSONArray();
         for(int i = 0; i < CategoryArr.size(); i++){
             JSONObject data = new JSONObject();
 
             CategoryList categoryList = CategoryArr.get(i);
+            data.put("cs_id", categoryList.getCs_id());
             data.put("cl_activity", categoryList.getCl_activity());
             data.put("cm_activity", categoryList.getCm_activity());
             data.put("cs_activity", categoryList.getCs_activity());
 
-            jsonInarr1.put(categoryList.getCs_id(), data);
+            jsonInarr1.add(i, data);
         }
         jsonArray.put("category_list", jsonInarr1);
 
+        JSONArray jsonInarr2 = new JSONArray();
         List<LocationInfo> locationInfoList = mapper.getLocationInfoAll();
         for(int i = 0; i < locationInfoList.size(); i++){
             JSONObject data = new JSONObject();
@@ -242,7 +258,7 @@ public class MemberInfoController {
             data.put("lc_name",locationInfo.getLc_name());
             data.put("cs_activity", locationInfo.getCs_activity());
 
-            jsonInarr2.put(Integer.toString(i), data);
+            jsonInarr2.add(i, data);
         }
 
         jsonArray.put("location_list", jsonInarr2);
@@ -250,7 +266,7 @@ public class MemberInfoController {
     }
 
     // DB에 접근해서 버킷리스트에 새로운 활동을 담을 api
-    @RequestMapping(value = "/api/bucketlist/add", method= RequestMethod.POST, produces = "application/json; charset=utf8")
+    @RequestMapping(value = "/api/bucketlist/add", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public JSONObject putCategoryContent(@RequestBody BucketlistContentVO bucketlistContentVO) {
         int bk_id = mapper.getBucktlistID(bucketlistContentVO.getMem_idnum());
         String lc_id = bucketlistContentVO.getLc_id();
@@ -262,4 +278,18 @@ public class MemberInfoController {
 
         return jsonObject;
     }
+
+    // 일정 거리 내에 있는 활동들의 정보를 반환할 api
+//    @RequestMapping(value = "/api/bucketlist/reclist", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+//    public JSONObject getCategoryRecList(@RequestBody BucketlistRecContentVO bucketlistRecContentVO){
+//        // user의 고유 id를 가져옴
+//        int mem_idnum = bucketlistRecContentVO.getMem_idnum();
+//
+//        JSONObject jsonArray = new JSONObject();
+//        // 아이디가 mem_idnum인 유저가 소유한 버킷리스트의 id 가져오기
+//        int bk_id = mapper.getBucktlistID(mem_idnum);
+//
+//        // mem_idnum인 유저가 소유한 버킷리스트 내의 데이터들을 가져옴
+//        List<BucketlistContent> BucketlistContentList = mapper.getBucketlistContentRecList(bk_id); //구현
+//    }
 }
