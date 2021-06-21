@@ -172,6 +172,8 @@ public class MemberInfoController {
     @RequestMapping(value = "/api/bucketlist/list", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public JSONObject getBucketListContentList(@RequestBody MemberIDnumVO memberIDnumVO){ // 클라이언트에게 mem_idnum을 받아옴
         int mem_idnum = Integer.parseInt(memberIDnumVO.getMem_idnum());
+        System.out.print("mem_idnum check : ");
+        System.out.println(mem_idnum);
 
         JSONObject jsonRet = new JSONObject();
 
