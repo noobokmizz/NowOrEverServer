@@ -270,18 +270,29 @@ public class MemberInfoController {
     // DB에 접근해서 버킷리스트에 새로운 활동을 담을 api
     @RequestMapping(value = "/api/bucketlist/add", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public JSONObject putCategoryContent(@RequestBody BucketlistContentVO bucketlistContentVO) {
+        JSONObject jsonObject = new JSONObject();
+        String cs_id;
+        cs_id = bucketlistContentVO.getCs_id();
         System.out.println("----------------bucketlist content add API check");
         System.out.print("cs_id : ");
-        System.out.println(bucketlistContentVO.getCs_id());
+        System.out.println(cs_id);
+
+        if (cs_id.equals("") || cs_id.equals(null)){
+            jsonObject.put("status", 0);
+
+            return jsonObject;
+        }
         System.out.print("lc_id : ");
         System.out.println(bucketlistContentVO.getLc_id());
+
+
         int id_num = Integer.parseInt(bucketlistContentVO.getMem_idnum());
         int bk_id = mapper.getBucktlistID(id_num);
         String lc_id = bucketlistContentVO.getLc_id();
         if (lc_id.equals("")) lc_id = "-1"; // lc_id가 -1이면 원하는 장소는 없고 카테고리만 선택
         mapper.putBuecketlistCont(bk_id, bucketlistContentVO.getCs_id(), lc_id, id_num);
 
-        JSONObject jsonObject = new JSONObject();
+
         jsonObject.put("status", 1); // 제대로 데이터베이스에 넣는걸 성공했으면 1을 담고 클라이언트에게 반환
 
         return jsonObject;
@@ -292,6 +303,7 @@ public class MemberInfoController {
     public JSONObject getCategoryRecList(@RequestBody BucketlistRecContentVO bucketlistRecContentVO){
         double cur_x = Double.parseDouble(bucketlistRecContentVO.getCur_x());
         double cur_y = Double.parseDouble(bucketlistRecContentVO.getCur_y());
+
 
         JSONObject jsonObject = new JSONObject();
 
