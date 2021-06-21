@@ -171,9 +171,11 @@ public class MemberInfoController {
     // 버킷리스트 내의 활동 목록 반환 api
     @RequestMapping(value = "/api/bucketlist/list", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public JSONObject getBucketListContentList(@RequestBody MemberIDnumVO memberIDnumVO){ // 클라이언트에게 mem_idnum을 받아옴
-        int mem_idnum = Integer.parseInt(memberIDnumVO.getMem_idnum());
         System.out.print("mem_idnum check : ");
-        System.out.println(mem_idnum);
+        System.out.println(memberIDnumVO.getMem_idnum());
+
+        int mem_idnum = Integer.parseInt(memberIDnumVO.getMem_idnum());
+
 
         JSONObject jsonRet = new JSONObject();
 
