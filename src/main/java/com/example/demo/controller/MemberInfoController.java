@@ -268,6 +268,11 @@ public class MemberInfoController {
     // DB에 접근해서 버킷리스트에 새로운 활동을 담을 api
     @RequestMapping(value = "/api/bucketlist/add", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public JSONObject putCategoryContent(@RequestBody BucketlistContentVO bucketlistContentVO) {
+        System.out.println("----------------bucketlist content add API check");
+        System.out.print("cs_id : ");
+        System.out.println(bucketlistContentVO.getCs_id());
+        System.out.print("lc_id : ");
+        System.out.println(bucketlistContentVO.getLc_id());
         int id_num = Integer.parseInt(bucketlistContentVO.getMem_idnum());
         int bk_id = mapper.getBucktlistID(id_num);
         String lc_id = bucketlistContentVO.getLc_id();
