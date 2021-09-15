@@ -25,7 +25,7 @@ public class MemberController {
     @PostMapping("/user/register")
     public String signupMemberInfo(@RequestBody User.RequestSignUp requestSignUp) throws JsonProcessingException {
         memberService.join(requestSignUp); // 회원가입 서비스 실행
-
+        // 에외처리 구현하기
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(new DefaultResponse(1));
     }
@@ -33,7 +33,8 @@ public class MemberController {
     /** 로그인 api **/
     @PostMapping("/user/login")
     public String loginMemberInfo(@RequestBody User.RequestLogin requestLogin){
-        new DefaultResponse.LoginResponse(0,  memberService.login(requestLogin), "No UserId / Password Found"));
+         memberService.login(requestLogin);
+         return "";
     }
 
     /** id 로 user 찾는 api **/

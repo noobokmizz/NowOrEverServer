@@ -40,16 +40,6 @@ public class User {
 
     @Getter
     @Setter
-    public static class ResponseLogin {
-        private String mem_idnum;
-        private String mem_username;
-        private String mem_birthday;
-        private String mem_email;
-        private String mem_password;
-    }
-
-    @Getter
-    @Setter
     public static class RequestSignUp {
         private String mem_userid;
         private String mem_email;

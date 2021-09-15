@@ -69,12 +69,23 @@ public class MemberService {
     }
 
     /** 로그인 **/
-    public User.ResponseLogin login(User.RequestLogin requestLogin){
-        User.ResponseLogin responseLogin = new User.ResponseLogin();
-        Optional<Members> members = memberRepository.findByLoginId(requestLogin.getMem_userid(), requestLogin.getMem_password());
-        members.ifPresent(
-                responseLogin.setMem_idnum(members.get().getMem_idnum());
+    public Optional<DefaultResponse.Data> login(User.RequestLogin requestLogin){
+        memberRepository.findByLoginId(requestLogin.getMem_userid(), requestLogin.getMem_password())
+                .ifPresentOrElse(
+                        (members -> {
+                            DefaultResponse.Data data = new DefaultResponse.Data(
+                                    members.getMem_idnum(),
+                                    members.getMem_username(),
+                                    members.getMem_birthday(),
+                                    members.getMem_email(),
+                                    members.getMem_password());
+                            Optional.of(data);
+                        }),
+                        () -> {
+
+                        })
     }
+
 
     /** 중복 회원 검증 **/
     private void validateDuplicateUser(Members members){

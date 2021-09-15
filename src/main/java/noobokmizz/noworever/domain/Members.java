@@ -9,7 +9,7 @@ import javax.persistence.IdClass;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@Data // getter setter 를 자동 생성 -> Data Annotaion 쓰지마!
+// @Data // getter setter 를 자동 생성 -> Data Annotaion 쓰지마!
 @Getter
 @Setter
 @Entity
