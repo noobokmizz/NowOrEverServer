@@ -25,10 +25,9 @@ public class JpaMemberRepository implements MemberRepository{
 
     @Override
     public Optional<Members> findById(String mem_userid) {
-        Members members = em.createQuery("select m from Members m where m.mem_userid = :mem_userid", Members.class)
+        return Optional.ofNullable(em.createQuery("select m from Members m where m.mem_userid = :mem_userid", Members.class)
                 .setParameter("mem_userid", mem_userid)
-                .getSingleResult();
-        return Optional.ofNullable(members);
+                .getSingleResult());
     }
 
     @Override

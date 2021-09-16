@@ -10,27 +10,33 @@
 package noobokmizz.noworever.service;
 
 import noobokmizz.noworever.domain.Members;
-import noobokmizz.noworever.dto.DefaultResponse;
+import noobokmizz.noworever.dto.Data;
 import noobokmizz.noworever.dto.User;
 import noobokmizz.noworever.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
-
+// jpa 를 사용하려면 data 를 저장하거나 변경할때 항상 transactional 이 있어야함
+// DB에 쿼리를 던진 후에 commit 을 해야 반영이 됨.
+@Transactional
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
+    private static int sequence = 1;
 
     public MemberService(MemberRepository memberRepository){
         this.memberRepository = memberRepository;
     }
 
     /** 회원 가입 **/
-    public String join(User.RequestSignUp request){
+    public int join(User.RequestSignUp request){
         Members members = new Members();
 
         // column 값 설정 설정
@@ -60,39 +66,51 @@ public class MemberService {
         members.setMem_lastlogin_datetime(new Timestamp(System.currentTimeMillis())); // 현재 시간 삽입
         members.setMem_adminmemo("admin memo~");
         members.setMem_photo("no path");
+        members.setMem_idnum(++sequence);
 
-        validateDuplicateUser(members);  // 중복된 회원이 있는지 검사
-        // 회원가입 실패하는 예외 처리는 어떻게하지???
+        try {
+            validateDuplicateUser(members);  // 중복된 회원이 있는지 검사
+        }catch (Exception e){
+            if(e.getMessage()=="이미 존재하는 id 입니다."){
+                return 0;
+            }
+        }
 
         memberRepository.save(members); // 테이블에 새로운 멤버 정보 삽입
-       return members.getMem_userid();
+        return 1;
     }
 
     /** 로그인 **/
-    public Optional<DefaultResponse.Data> login(User.RequestLogin requestLogin){
+    public Map<Integer, Optional<Data>> login(User.RequestLogin requestLogin){
+        AtomicReference<Map<Integer, Optional<Data>>> data = null;
         memberRepository.findByLoginId(requestLogin.getMem_userid(), requestLogin.getMem_password())
-                .ifPresentOrElse(
-                        (members -> {
-                            DefaultResponse.Data data = new DefaultResponse.Data(
+                .ifPresent(
+                        members -> {
+                            HashMap<Integer, Optional<Data>> map = new HashMap<Integer, Optional<Data>>();
+                            Data data1 = new Data(
                                     members.getMem_idnum(),
-                                    members.getMem_username(),
                                     members.getMem_birthday(),
                                     members.getMem_email(),
-                                    members.getMem_password());
-                            Optional.of(data);
-                        }),
-                        () -> {
+                                    members.getMem_password(),
+                                    members.getMem_username());
+                            data.set(map.put(1, Optional.of(data1)));
+                        }
+                );
+        return data.get();
 
-                        })
     }
-
 
     /** 중복 회원 검증 **/
     private void validateDuplicateUser(Members members){
-        memberRepository.findById(members.getMem_userid())
-                .ifPresent(u -> {
-                    throw new IllegalStateException("이미 존재하는 id 입니다.");
-                });
+        try {
+            memberRepository.findById(members.getMem_userid())
+                    .ifPresent(u -> {
+                        throw new IllegalStateException("이미 존재하는 id 입니다.");
+                    });
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     /** 전체 회원 조회 **/

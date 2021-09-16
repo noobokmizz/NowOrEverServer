@@ -3,10 +3,12 @@ package noobokmizz.noworever.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import noobokmizz.noworever.domain.Members;
+import noobokmizz.noworever.dto.Data;
 import noobokmizz.noworever.dto.DefaultResponse;
 import noobokmizz.noworever.dto.User;
 import noobokmizz.noworever.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.ast.OpInc;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,19 +24,18 @@ public class MemberController {
     }
 
     /** 회원가입 api **/
-    @PostMapping("/user/register")
-    public String signupMemberInfo(@RequestBody User.RequestSignUp requestSignUp) throws JsonProcessingException {
-        memberService.join(requestSignUp); // 회원가입 서비스 실행
-        // 에외처리 구현하기
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(new DefaultResponse(1));
+    @RequestMapping(value = "user/register", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    @ResponseBody  // http의 응답 body부에 이 데이터를 직접 넣겠다(api를 통해 데이터를 바로 내리겠다).
+    public DefaultResponse signupMemberInfo(@RequestBody User.RequestSignUp requestSignUp) {
+        return new DefaultResponse(memberService.join(requestSignUp));
     }
 
     /** 로그인 api **/
     @PostMapping("/user/login")
-    public String loginMemberInfo(@RequestBody User.RequestLogin requestLogin){
-         memberService.login(requestLogin);
-         return "";
+    @ResponseBody  // http의 응답 body부에 이 데이터를 직접 넣겠다(api를 통해 데이터를 바로 내리겠다).
+    public DefaultResponse.ResponseLogin loginMemberInfo(@RequestBody User.RequestLogin requestLogin){
+        Data data = memberService.login(requestLogin).orElseGet(null);
+
     }
 
     /** id 로 user 찾는 api **/
