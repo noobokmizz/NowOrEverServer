@@ -31,11 +31,18 @@ public class MemberController {
     }
 
     /** 로그인 api **/
-    @PostMapping("/user/login")
+    @GetMapping("/user/login")
     @ResponseBody  // http의 응답 body부에 이 데이터를 직접 넣겠다(api를 통해 데이터를 바로 내리겠다).
     public DefaultResponse.ResponseLogin loginMemberInfo(@RequestBody User.RequestLogin requestLogin){
-        Data data = memberService.login(requestLogin).orElseGet(null);
-
+        DefaultResponse.ResponseLogin responseLogin = new DefaultResponse.ResponseLogin(0, null, "");
+        try {
+            responseLogin.setData(memberService.login(requestLogin));
+            responseLogin.setStatus(1);
+        }catch (Exception e){
+            responseLogin.setMsg("No UserId / Password Found");
+        }finally {
+            return responseLogin;
+        }
     }
 
     /** id 로 user 찾는 api **/

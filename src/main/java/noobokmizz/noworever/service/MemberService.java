@@ -12,16 +12,17 @@ package noobokmizz.noworever.service;
 import noobokmizz.noworever.domain.Members;
 import noobokmizz.noworever.dto.Data;
 import noobokmizz.noworever.dto.User;
+import noobokmizz.noworever.repository.JpaMemberRepository;
 import noobokmizz.noworever.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static org.springframework.data.repository.util.ClassUtils.ifPresent;
 
 // jpa 를 사용하려면 data 를 저장하거나 변경할때 항상 transactional 이 있어야함
 // DB에 쿼리를 던진 후에 commit 을 해야 반영이 됨.
@@ -81,23 +82,23 @@ public class MemberService {
     }
 
     /** 로그인 **/
-    public Map<Integer, Optional<Data>> login(User.RequestLogin requestLogin){
-        AtomicReference<Map<Integer, Optional<Data>>> data = null;
-        memberRepository.findByLoginId(requestLogin.getMem_userid(), requestLogin.getMem_password())
-                .ifPresent(
-                        members -> {
-                            HashMap<Integer, Optional<Data>> map = new HashMap<Integer, Optional<Data>>();
-                            Data data1 = new Data(
-                                    members.getMem_idnum(),
-                                    members.getMem_birthday(),
-                                    members.getMem_email(),
-                                    members.getMem_password(),
-                                    members.getMem_username());
-                            data.set(map.put(1, Optional.of(data1)));
-                        }
-                );
-        return data.get();
+    public Data login(User.RequestLogin requestLogin){
+        try {
+            Members members = memberRepository.findByLoginId(requestLogin.getMem_userid(), requestLogin.getMem_password())
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 회웝입니다."));
 
+            Data data = new Data(
+                    members.getMem_idnum(),
+                    members.getMem_username(),
+                    members.getMem_birthday(),
+                    members.getMem_email(),
+                    members.getMem_password()
+            );
+            return data;
+
+        }catch (Exception e){
+            throw e;
+        }
     }
 
     /** 중복 회원 검증 **/
