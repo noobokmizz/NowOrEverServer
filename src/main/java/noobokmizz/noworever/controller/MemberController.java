@@ -31,7 +31,7 @@ public class MemberController {
     }
 
     /** 로그인 api **/
-    @GetMapping("/user/login")
+    @PostMapping("/user/login")
     @ResponseBody  // http의 응답 body부에 이 데이터를 직접 넣겠다(api를 통해 데이터를 바로 내리겠다).
     public DefaultResponse.ResponseLogin loginMemberInfo(@RequestBody User.RequestLogin requestLogin){
         DefaultResponse.ResponseLogin responseLogin = new DefaultResponse.ResponseLogin(0, null, "");

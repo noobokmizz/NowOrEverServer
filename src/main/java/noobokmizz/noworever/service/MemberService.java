@@ -14,6 +14,7 @@ import noobokmizz.noworever.dto.Data;
 import noobokmizz.noworever.dto.User;
 import noobokmizz.noworever.repository.JpaMemberRepository;
 import noobokmizz.noworever.repository.MemberRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,14 +31,21 @@ import static org.springframework.data.repository.util.ClassUtils.ifPresent;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
-    private static int sequence = 1;
-
     public MemberService(MemberRepository memberRepository){
         this.memberRepository = memberRepository;
     }
 
     /** 회원 가입 **/
     public int join(User.RequestSignUp request){
+
+        try {
+            validateDuplicateUser(request.getMem_userid());  // 중복된 회원이 있는지 검사
+        }catch (Exception e){
+            if(e.getMessage()=="이미 존재하는 id 입니다."){
+                return 0;
+            }
+        }
+
         Members members = new Members();
 
         // column 값 설정 설정
@@ -67,15 +75,6 @@ public class MemberService {
         members.setMem_lastlogin_datetime(new Timestamp(System.currentTimeMillis())); // 현재 시간 삽입
         members.setMem_adminmemo("admin memo~");
         members.setMem_photo("no path");
-        members.setMem_idnum(++sequence);
-
-        try {
-            validateDuplicateUser(members);  // 중복된 회원이 있는지 검사
-        }catch (Exception e){
-            if(e.getMessage()=="이미 존재하는 id 입니다."){
-                return 0;
-            }
-        }
 
         memberRepository.save(members); // 테이블에 새로운 멤버 정보 삽입
         return 1;
@@ -84,6 +83,7 @@ public class MemberService {
     /** 로그인 **/
     public Data login(User.RequestLogin requestLogin){
         try {
+            // 에러가 발생하지 않으면 로그인 성공
             Members members = memberRepository.findByLoginId(requestLogin.getMem_userid(), requestLogin.getMem_password())
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 회웝입니다."));
 
@@ -102,9 +102,9 @@ public class MemberService {
     }
 
     /** 중복 회원 검증 **/
-    private void validateDuplicateUser(Members members){
+    private void validateDuplicateUser(String mem_userid){
         try {
-            memberRepository.findById(members.getMem_userid())
+            memberRepository.findById(mem_userid)
                     .ifPresent(u -> {
                         throw new IllegalStateException("이미 존재하는 id 입니다.");
                     });

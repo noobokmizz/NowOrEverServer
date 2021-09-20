@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import noobokmizz.noworever.repository.MemberRepository;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.io.Serializable;
 
 @Getter

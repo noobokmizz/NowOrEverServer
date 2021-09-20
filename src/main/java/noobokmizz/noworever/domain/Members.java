@@ -3,9 +3,7 @@ package noobokmizz.noworever.domain;
 import lombok.*;
 import noobokmizz.noworever.repository.MemberRepository;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
