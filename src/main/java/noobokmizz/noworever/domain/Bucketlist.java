@@ -14,8 +14,9 @@ import javax.persistence.IdClass;
 public class Bucketlist {
     @Id
     private int bk_id; // 버킷리스트 id
-    private String cs_id; // 버킷리스트 내의 속한 활동의 분류
-    private String lc_id; // 버킷리스트 내의 활동의 id
     @Id
     private int mem_idnum; // 해당 버킷리스트를 소유한 회읜의 id
+    private String bk_name;  // 버킷리스트 이름
+    private int bk_open_bucketlist;  // 버킷리스트 공개 여부
+    private int bk_share;  // 공동 버킷리스트 여부
 }

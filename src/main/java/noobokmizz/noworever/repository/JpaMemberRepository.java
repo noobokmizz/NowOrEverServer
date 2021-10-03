@@ -1,5 +1,6 @@
 package noobokmizz.noworever.repository;
 
+import noobokmizz.noworever.domain.Bucketlist;
 import noobokmizz.noworever.domain.Members;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +22,12 @@ public class JpaMemberRepository implements MemberRepository{
     public Members save(Members members) {
         em.persist(members);
         return members;
+    }
+
+    @Override
+    public Bucketlist save(Bucketlist bucketlist){  // save function overloading
+        em.persist(bucketlist);
+        return bucketlist;
     }
 
     @Override

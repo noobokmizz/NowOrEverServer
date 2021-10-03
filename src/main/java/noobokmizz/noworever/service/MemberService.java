@@ -9,6 +9,7 @@
 
 package noobokmizz.noworever.service;
 
+import noobokmizz.noworever.domain.Bucketlist;
 import noobokmizz.noworever.domain.Members;
 import noobokmizz.noworever.dto.Data;
 import noobokmizz.noworever.dto.User;
@@ -77,6 +78,18 @@ public class MemberService {
         members.setMem_photo("no path");
 
         memberRepository.save(members); // 테이블에 새로운 멤버 정보 삽입
+
+
+        // 회원 가입시 그 회원의 버킷리스트 생성
+        Bucketlist bucketlist = new Bucketlist();
+
+        // columns 값 설정
+        bucketlist.setMem_idnum(memberRepository.findById(request.getMem_userid()).get().getMem_idnum());
+        bucketlist.setBk_name(members.getMem_username()+"의 버킷리스트");
+        bucketlist.setBk_share(0);
+        bucketlist.setBk_open_bucketlist(0);
+
+        memberRepository.save(bucketlist); // save function overloading
         return 1;
     }
 
