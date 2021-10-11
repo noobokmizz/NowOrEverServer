@@ -1,6 +1,5 @@
 package noobokmizz.noworever.repository;
 
-import noobokmizz.noworever.domain.Bucketlist;
 import noobokmizz.noworever.domain.Members;
 
 
@@ -18,8 +17,8 @@ import java.util.Optional;
 
 public interface MemberRepository {
     Members save(Members members);
-    Bucketlist save(Bucketlist bucketlist);
     Optional<Members> findById(String mem_userid);
-    Optional<Members> findByLoginId(String mem_userid, String mem_password);
+    Optional<Members> findByIdAndPW(String mem_userid, String mem_password);
     List<Members> findAll();
+    List<Members> findMaxBkId();
 }

@@ -9,22 +9,16 @@
 
 package noobokmizz.noworever.service;
 
-import noobokmizz.noworever.domain.Bucketlist;
 import noobokmizz.noworever.domain.Members;
 import noobokmizz.noworever.dto.Data;
 import noobokmizz.noworever.dto.User;
-import noobokmizz.noworever.repository.JpaMemberRepository;
 import noobokmizz.noworever.repository.MemberRepository;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.springframework.data.repository.util.ClassUtils.ifPresent;
 
 // jpa 를 사용하려면 data 를 저장하거나 변경할때 항상 transactional 이 있어야함
 // DB에 쿼리를 던진 후에 commit 을 해야 반영이 됨.
@@ -77,19 +71,13 @@ public class MemberService {
         members.setMem_adminmemo("admin memo~");
         members.setMem_photo("no path");
 
+        members.setBk_id(memberRepository.findMaxBkId().get(0).getBk_id()+1);
+        members.setBk_name(request.getMem_username()+"의 버킷리스트");
+        members.setBk_share(0);
+        members.setBk_open_bucketlist(0);
+
         memberRepository.save(members); // 테이블에 새로운 멤버 정보 삽입
 
-
-        // 회원 가입시 그 회원의 버킷리스트 생성
-        Bucketlist bucketlist = new Bucketlist();
-
-        // columns 값 설정
-        bucketlist.setMem_idnum(memberRepository.findById(request.getMem_userid()).get().getMem_idnum());
-        bucketlist.setBk_name(members.getMem_username()+"의 버킷리스트");
-        bucketlist.setBk_share(0);
-        bucketlist.setBk_open_bucketlist(0);
-
-        memberRepository.save(bucketlist); // save function overloading
         return 1;
     }
 
@@ -97,7 +85,7 @@ public class MemberService {
     public Data login(User.RequestLogin requestLogin){
         try {
             // 에러가 발생하지 않으면 로그인 성공
-            Members members = memberRepository.findByLoginId(requestLogin.getMem_userid(), requestLogin.getMem_password())
+            Members members = memberRepository.findByIdAndPW(requestLogin.getMem_userid(), requestLogin.getMem_password())
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 회웝입니다."));
 
             Data data = new Data(
@@ -105,7 +93,9 @@ public class MemberService {
                     members.getMem_username(),
                     members.getMem_birthday(),
                     members.getMem_email(),
-                    members.getMem_password()
+                    members.getMem_password(),
+                    members.getBk_id(),
+                    members.getBk_name()
             );
             return data;
 

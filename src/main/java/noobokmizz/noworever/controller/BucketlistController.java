@@ -1,7 +1,12 @@
 package noobokmizz.noworever.controller;
 
+import noobokmizz.noworever.dto.Bucketlist;
+import noobokmizz.noworever.dto.DefaultResponse;
 import noobokmizz.noworever.service.BucketlistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -24,8 +29,20 @@ public class BucketlistController {
     }
 
     /** 특정 id를 갖는 user 의 bucket list 목록 반환 api **/
+    @PostMapping("/bucketlist/show")
+    @ResponseBody  // http의 응답 body부에 이 데이터를 직접 넣겠다(api를 통해 데이터를 바로 내리겠다).
+    public Bucketlist.BucketlistMultipleContetns bucketlistRead(@RequestBody Bucketlist bucketlist){
+        return bucketlistService.findBKContents(bucketlist);
+    }
 
     /** bucket list 에 새로운 활동을 담는 api **/
+    public DefaultResponse bucketlistAdd(){
+        return new DefaultResponse(1);
+    }
 
+    /** bucket list 내의 활동 삭제 api **/
+    public DefaultResponse bucketlistDelete(){
+        return new DefaultResponse(1);
+    }
     /** bucket list 에서 일정 거리 내에 있는 활동들의 정보만 반환하는 api **/
 }

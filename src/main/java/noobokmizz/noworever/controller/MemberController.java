@@ -1,14 +1,10 @@
 package noobokmizz.noworever.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import noobokmizz.noworever.domain.Members;
-import noobokmizz.noworever.dto.Data;
 import noobokmizz.noworever.dto.DefaultResponse;
 import noobokmizz.noworever.dto.User;
 import noobokmizz.noworever.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.spel.ast.OpInc;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +29,8 @@ public class MemberController {
     /** 로그인 api **/
     @PostMapping("/user/login")
     @ResponseBody  // http의 응답 body부에 이 데이터를 직접 넣겠다(api를 통해 데이터를 바로 내리겠다).
-    public DefaultResponse.ResponseLogin loginMemberInfo(@RequestBody User.RequestLogin requestLogin){
-        DefaultResponse.ResponseLogin responseLogin = new DefaultResponse.ResponseLogin(0, null, "");
+    public DefaultResponse.ResponseLoginUser loginMemberInfo(@RequestBody User.RequestLogin requestLogin){
+        DefaultResponse.ResponseLoginUser responseLogin = new DefaultResponse.ResponseLoginUser(0, null, "");
         try {
             responseLogin.setData(memberService.login(requestLogin));
             responseLogin.setStatus(1);

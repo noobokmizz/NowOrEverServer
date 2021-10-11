@@ -1,6 +1,5 @@
 package noobokmizz.noworever.repository;
 
-import noobokmizz.noworever.domain.Bucketlist;
 import noobokmizz.noworever.domain.Members;
 import org.springframework.stereotype.Repository;
 
@@ -25,12 +24,6 @@ public class JpaMemberRepository implements MemberRepository{
     }
 
     @Override
-    public Bucketlist save(Bucketlist bucketlist){  // save function overloading
-        em.persist(bucketlist);
-        return bucketlist;
-    }
-
-    @Override
     public Optional<Members> findById(String mem_userid) {
         return Optional.ofNullable(em.createQuery("select m from Members m where m.mem_userid = :mem_userid", Members.class)
                 .setParameter("mem_userid", mem_userid)
@@ -38,7 +31,7 @@ public class JpaMemberRepository implements MemberRepository{
     }
 
     @Override
-    public Optional<Members> findByLoginId(String mem_userid, String mem_password){
+    public Optional<Members> findByIdAndPW(String mem_userid, String mem_password){
         Members members = em.createQuery("select m from Members m where m.mem_userid = :mem_userid and m.mem_password = :mem_password", Members.class)
                 .setParameter("mem_userid", mem_userid)
                 .setParameter("mem_password", mem_password)
@@ -49,6 +42,12 @@ public class JpaMemberRepository implements MemberRepository{
     @Override
     public List<Members> findAll() {
         return em.createQuery("select m from Members as m", Members.class)
+                .getResultList();
+    }
+
+    @Override
+    public List<Members> findMaxBkId(){
+        return em.createQuery("select m.bk_id from Members m order by m.bk_id DESC", Members.class)
                 .getResultList();
     }
 }

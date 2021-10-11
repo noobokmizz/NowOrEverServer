@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-public class MemberId implements Serializable {
+public class MembersId implements Serializable {
     private int mem_idnum;
     private String mem_userid;
 }
