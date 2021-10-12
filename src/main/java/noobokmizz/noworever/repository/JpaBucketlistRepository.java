@@ -1,6 +1,7 @@
 package noobokmizz.noworever.repository;
 
 import noobokmizz.noworever.domain.Bkcontents;
+import noobokmizz.noworever.domain.Members;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -34,5 +35,16 @@ public class JpaBucketlistRepository implements BucketlistRepository{
                 .setParameter("mem_idnum", mem_idnum)
                 .setParameter("bk_id", bk_id)
                 .getResultList();
+    }
+
+    @Override
+    public Optional<Bkcontents> findByPK(int mem_idnum, int bk_id, String lc_id, String category){
+       return Optional.ofNullable(em.createQuery("select b from Bkcontents b " +
+                        "where b.mem_idnum = :mem_idnum and b.bk_id = :bk_id and b.lc_id = :lc_id and b.category = :category", Bkcontents.class)
+                .setParameter("mem_idnum", mem_idnum)
+                .setParameter("bk_id", bk_id)
+                .setParameter("lc_id", lc_id)
+                .setParameter("category", category)
+               .getSingleResult());
     }
 }

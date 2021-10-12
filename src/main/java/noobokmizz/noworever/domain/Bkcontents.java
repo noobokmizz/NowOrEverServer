@@ -24,6 +24,4 @@ public class Bkcontents {
     private int mem_idnum;
     @Id @Column(name = "members_bk_id")
     private int bk_id;
-    @Column(name = "members_mem_userid")
-    private String mem_userid;
 }

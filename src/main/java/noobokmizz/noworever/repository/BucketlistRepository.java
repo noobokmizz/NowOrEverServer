@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface BucketlistRepository {
     Bkcontents save(Bkcontents bkContents);
     List<Bkcontents> findAllByIdAndBkId(int mem_idnum, int bk_id);
+    Optional<Bkcontents> findByPK(int mem_idnum, int bk_id, String lc_id, String category);
 }

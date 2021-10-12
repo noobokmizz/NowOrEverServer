@@ -6,7 +6,9 @@ import noobokmizz.noworever.repository.BucketlistRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 @Transactional
 @Service
@@ -38,9 +40,41 @@ public class BucketlistService {
         return ret;
     }
 
-    /** 버킷리스트 내의 활동 중복 검증 **/
-
     /** bucket list 에 새로운 활동을 담는 api **/
+    public int put(Bucketlist.BucketlistSingleConetents bucketlistSingleConetents){
+        try {
+            valiateDuplicateAct(
+                    bucketlistSingleConetents.getMem_idnum(), bucketlistSingleConetents.getBk_id(),
+                    bucketlistSingleConetents.getBucketlistContents().getLc_id(),
+                    bucketlistSingleConetents.getBucketlistContents().getCategory()
+            );
+        }catch (Exception e){
+            if(e.getMessage()=="버킷리스트에 이미 존재하는 활동입니다."){
+                return 0;
+            }
+        }
+
+        Bkcontents bkcontents = new Bkcontents();
+        bkcontents.setMem_idnum(bucketlistSingleConetents.getMem_idnum());
+        bkcontents.setBk_id(bucketlistSingleConetents.getBk_id());
+        bkcontents.setLc_id(bucketlistSingleConetents.getBucketlistContents().getLc_id());
+        bkcontents.setCategory(bucketlistSingleConetents.getBucketlistContents().getCategory());
+        bucketlistRepository.save(bkcontents);
+        return 1;
+    }
+
+    /** 버킷리스트 내의 활동 중복 검증 **/
+    public void valiateDuplicateAct(int mem_idnum, int bk_id, String lc_id, String category){
+        try {
+            bucketlistRepository.findByPK(mem_idnum, bk_id, lc_id, category)
+                    .ifPresent(u -> {
+                        throw new IllegalStateException("버킷리스트에 이미 존재하는 활동입니다.");
+                    });
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
 
     /** bucket list 에서 일정 거리 내에 있는 활동들의 정보만 반환하는 api **/
 }

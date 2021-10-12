@@ -4,10 +4,7 @@ import noobokmizz.noworever.dto.Bucketlist;
 import noobokmizz.noworever.dto.DefaultResponse;
 import noobokmizz.noworever.service.BucketlistService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller 에는 @Controller 어노테이션
@@ -36,8 +33,10 @@ public class BucketlistController {
     }
 
     /** bucket list 에 새로운 활동을 담는 api **/
-    public DefaultResponse bucketlistAdd(){
-        return new DefaultResponse(1);
+    @RequestMapping(value = "/bucketlist/add", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    @ResponseBody
+    public DefaultResponse bucketlistAdd(@RequestBody Bucketlist.BucketlistSingleConetents bucketlistSingleConetents){
+        return new DefaultResponse(bucketlistService.put(bucketlistSingleConetents));
     }
 
     /** bucket list 내의 활동 삭제 api **/

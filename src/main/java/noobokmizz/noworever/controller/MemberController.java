@@ -20,7 +20,7 @@ public class MemberController {
     }
 
     /** 회원가입 api **/
-    @RequestMapping(value = "user/register", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    @RequestMapping(value = "/user/register", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     @ResponseBody  // http의 응답 body부에 이 데이터를 직접 넣겠다(api를 통해 데이터를 바로 내리겠다).
     public DefaultResponse signupMemberInfo(@RequestBody User.RequestSignUp requestSignUp) {
         return new DefaultResponse(memberService.join(requestSignUp));
