@@ -14,4 +14,5 @@ import java.io.Serializable;
 public class MembersId implements Serializable {
     private int mem_idnum;
     private String mem_userid;
+    private int bk_id;
 }

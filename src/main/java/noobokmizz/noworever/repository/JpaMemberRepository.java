@@ -47,7 +47,7 @@ public class JpaMemberRepository implements MemberRepository{
 
     @Override
     public List<Members> findMaxBkId(){
-        return em.createQuery("select m.bk_id from Members m order by m.bk_id DESC", Members.class)
+        return em.createQuery("select m from Members m order by m.bk_id DESC", Members.class)
                 .getResultList();
     }
 }

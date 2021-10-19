@@ -18,6 +18,8 @@ public class Members {
     private int mem_idnum;
     @Id
     private String mem_userid;
+    @Id
+    private int bk_id;
 
     private String mem_email;
     private String mem_nickname;
@@ -43,7 +45,6 @@ public class Members {
     private Timestamp mem_lastlogin_datetime;
     private String mem_adminmemo;
     private String mem_photo;
-    private int bk_id;
     private String bk_name;
     private int bk_open_bucketlist;
     private int bk_share;
