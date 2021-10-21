@@ -1,7 +1,6 @@
 package noobokmizz.noworever.repository;
 
-import noobokmizz.noworever.domain.Bkcontents;
-import noobokmizz.noworever.domain.Members;
+import noobokmizz.noworever.domain.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -31,20 +30,24 @@ public class JpaBucketlistRepository implements BucketlistRepository{
      * 결과가 정확히 1건 일때 사용한다.
      **/
     public List<Bkcontents> findAllByIdAndBkId(int mem_idnum, int bk_id) {
-        return em.createQuery("select b from Bkcontents b where b.mem_idnum = :mem_idnum and b.bk_id = :bk_id", Bkcontents.class)
+        return em.createQuery("select b from Bkcontents b where b.bkcontentsId.mem_idnum = :mem_idnum and b.bkcontentsId.bk_id = :bk_id", Bkcontents.class)
                 .setParameter("mem_idnum", mem_idnum)
                 .setParameter("bk_id", bk_id)
                 .getResultList();
     }
 
     @Override
-    public Optional<Bkcontents> findByPK(int mem_idnum, int bk_id, String lc_id, String category){
-       return Optional.ofNullable(em.createQuery("select b from Bkcontents b " +
-                        "where b.mem_idnum = :mem_idnum and b.bk_id = :bk_id and b.lc_id = :lc_id and b.category = :category", Bkcontents.class)
-                .setParameter("mem_idnum", mem_idnum)
-                .setParameter("bk_id", bk_id)
-                .setParameter("lc_id", lc_id)
-                .setParameter("category", category)
-               .getSingleResult());
+    public Optional<Bkcontents> findByPK(BkcontentsId bkcontentsId){
+        return Optional.ofNullable(em.find(Bkcontents.class, bkcontentsId));
+    }
+
+    @Override
+    public void delete(Bkcontents bkcontents) {
+        em.remove(bkcontents);
+    }
+
+    @Override
+    public Optional<Location> findByPK(LocationId locationId) {
+        return Optional.ofNullable(em.find(Location.class, locationId));
     }
 }

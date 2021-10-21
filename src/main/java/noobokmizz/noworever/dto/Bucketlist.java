@@ -38,6 +38,12 @@ public class Bucketlist {
     public static class BucketlistMultipleContetns extends Bucketlist {
         private List<BucketlistContents> bucketlistContentsList;
 
+        @ConstructorProperties({"mem_idnum", "bk_id", "bucketlistContentsList"})
+        public BucketlistMultipleContetns(int bk_id, int mem_idnum, List<BucketlistContents> bucketlistContentsList) {
+            super(bk_id, mem_idnum);
+            this.bucketlistContentsList = bucketlistContentsList;
+        }
+
         public BucketlistMultipleContetns(int bk_id, int mem_idnum) {
             super(bk_id, mem_idnum);
         }
@@ -46,12 +52,12 @@ public class Bucketlist {
     @Getter
     @Setter
     public static class BucketlistContents {
-        private String category;
+        private int category_id;
         private String lc_id;
 
-        @ConstructorProperties({"category", "lc_id"})
-        public BucketlistContents(String category, String lc_id){
-            this.category = category;
+        @ConstructorProperties({"category_id", "lc_id"})
+        public BucketlistContents(int category_id, String lc_id){
+            this.category_id = category_id;
             this.lc_id = lc_id;
         }
     }
