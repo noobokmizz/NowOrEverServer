@@ -1,10 +1,16 @@
 package noobokmizz.noworever.controller;
 
+import noobokmizz.noworever.domain.Location;
 import noobokmizz.noworever.dto.Bucketlist;
+import noobokmizz.noworever.dto.CategoryAndLocationLIst;
 import noobokmizz.noworever.dto.DefaultResponse;
+import noobokmizz.noworever.dto.Location_info;
 import noobokmizz.noworever.service.BucketlistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controller 에는 @Controller 어노테이션
@@ -45,5 +51,31 @@ public class BucketlistController {
     public DefaultResponse bucketlistDelete(@RequestBody Bucketlist.BucketlistMultipleContetns bucketlistMultipleContetns){
         return new DefaultResponse(bucketlistService.delete(bucketlistMultipleContetns));
     }
+
     /** bucket list 에서 일정 거리 내에 있는 활동들의 정보만 반환하는 api **/
+    @GetMapping("/bucketlist/recommendation")
+    @ResponseBody
+    public List<Location> bucketlistReco(@RequestParam int mem_idnum, @RequestParam int bk_id, @RequestParam String cur_x, @RequestParam String cur_y){
+        List<Bucketlist.BucketlistContents> bucketlistContentsList =
+                bucketlistService.show(new Bucketlist(mem_idnum, bk_id)).getBucketlistContentsList();
+        return bucketlistService.location_Rec(bucketlistContentsList, cur_x, cur_y);
+    }
+
+    /** category 목록과 category 별로 속한 location 반환 **/
+    @GetMapping("/categorylist")
+    @ResponseBody
+    public CategoryAndLocationLIst categoryAndLocRead(){
+        CategoryAndLocationLIst categoryAndLocationLIst = new CategoryAndLocationLIst();
+        // cateogory 목록 가져옴
+        categoryAndLocationLIst.setCategory_info(bucketlistService.category_infoList());
+
+        List<Location_info> location_infoList = new ArrayList<>();
+        int length = categoryAndLocationLIst.getCategory_info().size();
+        for(int i = 0; i < length; i++){
+            // cateogory 별 location 가져옴
+            location_infoList.add(bucketlistService.location_infoList(categoryAndLocationLIst.getCategory_info().get(i).getCategory_id()));
+        }
+        categoryAndLocationLIst.setLocation_info(location_infoList);
+        return categoryAndLocationLIst;
+    }
 }

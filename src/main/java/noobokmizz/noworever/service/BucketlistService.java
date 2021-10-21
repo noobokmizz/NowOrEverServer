@@ -1,13 +1,14 @@
 package noobokmizz.noworever.service;
 
-import noobokmizz.noworever.domain.Bkcontents;
-import noobokmizz.noworever.domain.BkcontentsId;
-import noobokmizz.noworever.domain.LocationId;
+import noobokmizz.noworever.domain.*;
 import noobokmizz.noworever.dto.Bucketlist;
+import noobokmizz.noworever.dto.LocationData;
+import noobokmizz.noworever.dto.Location_info;
 import noobokmizz.noworever.repository.BucketlistRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -59,9 +60,7 @@ public class BucketlistService {
                     bucketlistSingleConetents.getBucketlistContents().getLc_id(),
                     bucketlistSingleConetents.getBucketlistContents().getCategory_id()
             );
-
             validateDuplicateAct(bkcontentsId);  // 버킷리스트에 이미 존재하는 활동인지 검증
-
 
             bucketlistRepository.save(new Bkcontents(bkcontentsId));
         }catch (Exception e){
@@ -112,6 +111,62 @@ public class BucketlistService {
         }
     }
 
+    /** category 목록 반환 **/
+    public List<Category_info> category_infoList(){
+        return bucketlistRepository.findAllCategory();
+    }
+    /** category 별로 속한 location 반환 **/
+    public Location_info location_infoList(int lc_category){
+        Location_info location_info = new Location_info(lc_category);
+        List<Location> locations = bucketlistRepository.findByLc_category(lc_category);
 
-    /** bucket list 에서 일정 거리 내에 있는 활동들의 정보만 반환하는 api **/
+        int length = locations.size();
+        List<LocationData> locationDataList = new ArrayList<>();
+        for(int i = 0; i < length; i++){
+            locationDataList.add(new LocationData(
+                    locations.get(i).getLocationId().getLc_id(),
+                    locations.get(i).getLc_name()
+                    ));
+        }
+        location_info.setLocationData(locationDataList);
+        return location_info;
+    }
+
+    /** bucketlistContents의 장소와 사용자의 현재 위치중 일정 거리 내에 있는 활동만 반환 **/
+    public List<Location> location_Rec(List<Bucketlist.BucketlistContents> bucketlistContentsList, String cur_x, String cur_y){
+        List<Location> locationList = new ArrayList<>();
+        int length = bucketlistContentsList.size();
+        for(int i = 0; i < length; i++) {
+            bucketlistRepository.findByPK(new LocationId(
+                    bucketlistContentsList.get(i).getLc_id(), bucketlistContentsList.get(i).getCategory_id()))
+                    .ifPresent( location -> {
+                        // 카테고리만 담은 경우(lc_id가 -로 시작하는경우)를 제외하고 500m 이내에 있는 장소만 반환
+                        if (!location.getLocationId().getLc_id().startsWith("-") && distance(location.getLc_x(), location.getLc_y(), cur_x, cur_y) <= 500.0) {
+                            locationList.add(location);
+                        }
+                    });
+        }
+        return locationList;
+    }
+
+    private double distance(String lc_x, String lc_y, String cur_x, String cur_y){
+        // 두 위도 경도 간의 거리 구하기
+        double radius = 6371; // 지구 반지름(km)
+        double toRadian = Math.PI / 180;
+        double des_x = Double.parseDouble(lc_x);
+        double des_y = Double.parseDouble(lc_y);
+        double src_x = Double.parseDouble(cur_x);
+        double src_y = Double.parseDouble(cur_y);
+
+        double deltaLatitude = Math.abs(src_x - des_x) * toRadian;
+        double deltaLongitude = Math.abs(src_y - des_y) * toRadian;
+
+        double sinDeltaLat = Math.sin(deltaLatitude / 2);
+        double sinDeltaLng = Math.sin(deltaLongitude / 2);
+        double squareRoot = Math.sqrt(
+                sinDeltaLat * sinDeltaLat +
+                        Math.cos(src_x * toRadian) * Math.cos(des_x * toRadian) * sinDeltaLng * sinDeltaLng);
+
+        return 2 * radius * Math.asin(squareRoot) * 1000;
+    }
 }

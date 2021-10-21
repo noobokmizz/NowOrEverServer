@@ -50,4 +50,18 @@ public class JpaBucketlistRepository implements BucketlistRepository{
     public Optional<Location> findByPK(LocationId locationId) {
         return Optional.ofNullable(em.find(Location.class, locationId));
     }
+
+    @Override
+    public List<Category_info> findAllCategory() {
+        return em.createQuery("select c from Category_info as c ", Category_info.class)
+                .getResultList();
+    }
+
+    @Override
+    public List<Location> findByLc_category(int lc_category) {
+        return em.createQuery("select l from Location l where l.locationId.lc_category = :lc_category and l.locationId.lc_id not like '-%'", Location.class)
+                .setParameter("lc_category", lc_category)
+                .getResultList();
+    }
+
 }

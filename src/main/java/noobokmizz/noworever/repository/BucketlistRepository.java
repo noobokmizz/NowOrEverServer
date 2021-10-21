@@ -2,6 +2,7 @@ package noobokmizz.noworever.repository;
 
 import noobokmizz.noworever.domain.*;
 import noobokmizz.noworever.dto.Bucketlist;
+import noobokmizz.noworever.dto.Location_info;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface BucketlistRepository {
     Optional<Bkcontents> findByPK(BkcontentsId bkcontentsid);
     void delete(Bkcontents bkcontents);
     Optional<Location> findByPK(LocationId locationId);
+    List<Category_info> findAllCategory();
+    List<Location> findByLc_category(int lc_category);
 }

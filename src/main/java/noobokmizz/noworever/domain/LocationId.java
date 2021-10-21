@@ -1,9 +1,12 @@
 package noobokmizz.noworever.domain;
 
+import lombok.Getter;
+
 import javax.persistence.Embeddable;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+@Getter
 @Embeddable
 public class LocationId implements Serializable {
     private String lc_id;
