@@ -13,10 +13,14 @@ import javax.persistence.*;
 // => 데이터를 전송하기위해 Entity 를 사용해도 되지만,정의된 필드 외에 추가적인 필드가 필요한 경우 DTO 객체를 따로 선언해서 사용
 public class Bkcontents {
     @EmbeddedId
-    BkcontentsId bkcontentsId;
+    private BkcontentsId bkcontentsId;
+    private String lc_name;
+    private String category;
 
     public Bkcontents(){}
-    public Bkcontents(BkcontentsId bkcontentsId){
+    public Bkcontents(BkcontentsId bkcontentsId, String category, String lc_name){
         this.bkcontentsId = bkcontentsId;
+        this.category = category;
+        this.lc_name = lc_name;
     }
 }

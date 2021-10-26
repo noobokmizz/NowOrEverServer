@@ -64,4 +64,9 @@ public class JpaBucketlistRepository implements BucketlistRepository{
                 .getResultList();
     }
 
+    @Override
+    public Optional<Category_info> findByPK(Category_infoId category_infoId) {
+        return Optional.ofNullable(em.find(Category_info.class, category_infoId));
+    }
+
 }

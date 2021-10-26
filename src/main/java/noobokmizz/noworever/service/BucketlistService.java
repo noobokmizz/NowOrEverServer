@@ -38,8 +38,10 @@ public class BucketlistService {
         Bucketlist.BucketlistContents bucketlistContents[] = new Bucketlist.BucketlistContents[length];
         for(int i = 0; i < length; i++) {
             bucketlistContents[i] = new Bucketlist.BucketlistContents(
-                    bkcontentsList.get(i).getBkcontentsId().getCategory_id(), 
-                    bkcontentsList.get(i).getBkcontentsId().getLc_id()
+                    bkcontentsList.get(i).getBkcontentsId().getCategory_id(),
+                    bkcontentsList.get(i).getCategory(),
+                    bkcontentsList.get(i).getBkcontentsId().getLc_id(),
+                    bkcontentsList.get(i).getLc_name()
             );
         }
         ret.setBucketlistContentsList(List.of(bucketlistContents));
@@ -52,7 +54,13 @@ public class BucketlistService {
             LocationId locationId = new LocationId(
                     bucketlistSingleConetents.getBucketlistContents().getLc_id(),
                     bucketlistSingleConetents.getBucketlistContents().getCategory_id());
-            validateExistLoc(locationId); // 존재하는 {장소, 카테고리} 쌍인지 확인
+
+            if(!locationId.getLc_id().startsWith("-")){  // 장소를 선정한 경우
+                validateExistLoc(locationId); // 존재하는 {장소, 카테고리} 쌍인지 확인
+            }
+
+            validateCategory(bucketlistSingleConetents.getBucketlistContents().getCategory(),
+                    bucketlistSingleConetents.getBucketlistContents().getCategory_id());
 
             BkcontentsId bkcontentsId = new BkcontentsId(
                     bucketlistSingleConetents.getMem_idnum(),
@@ -62,9 +70,15 @@ public class BucketlistService {
             );
             validateDuplicateAct(bkcontentsId);  // 버킷리스트에 이미 존재하는 활동인지 검증
 
-            bucketlistRepository.save(new Bkcontents(bkcontentsId));
+            bucketlistRepository.save(new Bkcontents(
+                    bkcontentsId,
+                    bucketlistSingleConetents.getBucketlistContents().getCategory(),
+                    bucketlistSingleConetents.getBucketlistContents().getLc_name())
+            );
+
         }catch (Exception e){
-            if(e.getMessage()=="버킷리스트에 이미 존재하는 활동입니다." || e.getMessage() == "잘못된 장소, 카테고리 쌍입니다."){
+            if(e.getMessage()=="버킷리스트에 이미 존재하는 활동입니다." || e.getMessage() == "잘못된 장소, 카테고리 쌍입니다."
+            || e.getMessage()=="장소 이름이 유요하지 않습니다." || e.getMessage() == "잘못된 카테고리 분류 입니다."){
                 return 0;
             }
         }
@@ -88,7 +102,7 @@ public class BucketlistService {
         return 1;
     }
     /** bucket list 에 있는 활동인지 중복 검증 **/
-    public void validateDuplicateAct(BkcontentsId bkcontentsId){
+    private void validateDuplicateAct(BkcontentsId bkcontentsId){
         try {
             bucketlistRepository.findByPK(bkcontentsId)
                     .ifPresent(u -> {
@@ -100,21 +114,33 @@ public class BucketlistService {
         }
     }
 
-    /** location 에 { 존재하는 장소 + 카테고리 } 인지 검증 **/
-    public void validateExistLoc(LocationId locationId){
+    /** 1. location 에 { 존재하는 장소 + 카테고리 } 인지 검증 **/
+    private void validateExistLoc(LocationId locationId){
         try{
             bucketlistRepository.findByPK(locationId)
                     .orElseThrow(() -> new IllegalStateException("잘못된 장소, 카테고리 쌍입니다."));
+
         }catch (Exception e){
             e.printStackTrace();
             throw e;
         }
     }
 
+    /** { category, category_id } 가 유효한지 **/
+    private void validateCategory(String category, int category_id){
+        try{
+            bucketlistRepository.findByPK(new Category_infoId(category, category_id))
+                    .orElseThrow(() -> new IllegalStateException("잘못된 카테고리 분류 입니다."));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
     /** category 목록 반환 **/
     public List<Category_info> category_infoList(){
         return bucketlistRepository.findAllCategory();
     }
+
     /** category 별로 속한 location 반환 **/
     public Location_info location_infoList(int lc_category){
         Location_info location_info = new Location_info(lc_category);
@@ -149,8 +175,8 @@ public class BucketlistService {
         return locationList;
     }
 
+    // 두 위도 경도 간의 거리 구하기
     private double distance(String lc_x, String lc_y, String cur_x, String cur_y){
-        // 두 위도 경도 간의 거리 구하기
         double radius = 6371; // 지구 반지름(km)
         double toRadian = Math.PI / 180;
         double des_x = Double.parseDouble(lc_x);

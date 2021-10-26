@@ -16,4 +16,5 @@ public interface BucketlistRepository {
     Optional<Location> findByPK(LocationId locationId);
     List<Category_info> findAllCategory();
     List<Location> findByLc_category(int lc_category);
+    Optional<Category_info> findByPK(Category_infoId category_infoId);
 }

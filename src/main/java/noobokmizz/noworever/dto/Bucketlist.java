@@ -1,7 +1,5 @@
 package noobokmizz.noworever.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,12 +51,17 @@ public class Bucketlist {
     @Setter
     public static class BucketlistContents {
         private int category_id;
+        private String category;
         private String lc_id;
+        private String lc_name;
 
-        @ConstructorProperties({"category_id", "lc_id"})
-        public BucketlistContents(int category_id, String lc_id){
+        @ConstructorProperties({"category_id", "category", "lc_id", "lc_name"})
+        public BucketlistContents(int category_id, String category, String lc_id, String lc_name){
             this.category_id = category_id;
+            this.category = category;
             this.lc_id = lc_id;
+            this.lc_name = lc_name;
         }
+
     }
 }

@@ -41,6 +41,8 @@ public class MemberController {
         }
     }
 
+    /** 회원 탈퇴 **/
+
     /** id 로 user 찾는 api **/
     @GetMapping("/user/{mem_userid}")
     public Optional<Members> getMemberInfo(@PathVariable("mem_userid") String mem_userid){
