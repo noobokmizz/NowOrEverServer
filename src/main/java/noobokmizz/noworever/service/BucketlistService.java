@@ -8,10 +8,9 @@ import noobokmizz.noworever.repository.BucketlistRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
-import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Transactional
 @Service
@@ -86,6 +85,7 @@ public class BucketlistService {
     }
     /** bucket list 내의 활동 삭제 **/
     public int delete(Bucketlist.BucketlistMultipleContetns bucketlistMultipleContetns){
+        AtomicInteger ret = new AtomicInteger();
         for(int i = 0; i < bucketlistMultipleContetns.getBucketlistContentsList().size(); i++) {
             BkcontentsId bkcontentsId = new BkcontentsId();
             bkcontentsId.setMem_idnum(bucketlistMultipleContetns.getMem_idnum());
@@ -96,10 +96,13 @@ public class BucketlistService {
             // 삭제하고자 하는 데이터가 존재한다면 삭제
             bucketlistRepository.findByPK(bkcontentsId)
                     .ifPresent(
-                            bkc -> bucketlistRepository.delete(bkc)
+                            bkc -> {
+                                bucketlistRepository.delete(bkc);
+                                ret.set(1);
+                            }
                     );
         }
-        return 1;
+        return ret.get();
     }
     /** bucket list 에 있는 활동인지 중복 검증 **/
     private void validateDuplicateAct(BkcontentsId bkcontentsId){
