@@ -25,7 +25,7 @@ public class Bucketlist {
     public static class BucketlistSingleConetents extends Bucketlist {
         private BucketlistContents bucketlistContents;
 
-        @ConstructorProperties({"mem_idnum", "bk_id", "bucketlistContentsList"})
+        @ConstructorProperties({"mem_idnum", "bk_id", "bucketlistContents"})
         public BucketlistSingleConetents(int mem_idnum, int bk_id, BucketlistContents bucketlistContents){
             super(mem_idnum, bk_id);
             this.bucketlistContents = bucketlistContents;
