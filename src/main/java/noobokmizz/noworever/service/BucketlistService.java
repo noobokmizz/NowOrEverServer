@@ -103,7 +103,7 @@ public class BucketlistService {
         bkcontentsId.setLc_id(bucketlistMultipleContetns.getBucketlistContentsList().get(0).getLc_id());
         bkcontentsId.setCategory_id(bucketlistMultipleContetns.getBucketlistContentsList().get(0).getCategory_id());
 
-        AtomicReference<String> status = new AtomicReference<>("존재하지 않는 활동입니다");
+        AtomicReference<String> status = new AtomicReference<>("0");
         bucketlistRepository.findByPK(bkcontentsId)
                 .ifPresent(bkc-> {
                     bucketlistRepository.delete(bkc);
