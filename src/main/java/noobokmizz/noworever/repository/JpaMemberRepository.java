@@ -32,9 +32,10 @@ public class JpaMemberRepository implements MemberRepository{
 
     @Override
     public Optional<Members> findByIdAndPW(String mem_userid, String mem_password){
-        Members members = em.createQuery("select m from Members m where m.mem_userid = :mem_userid and m.mem_password = :mem_password", Members.class)
+        Members members = em.createQuery("select m from Members m where m.mem_userid = :mem_userid and m.mem_password = :mem_password and m.bk_share = :none", Members.class)
                 .setParameter("mem_userid", mem_userid)
                 .setParameter("mem_password", mem_password)
+                .setParameter("none", 0)
                 .getSingleResult();
         return Optional.ofNullable(members);
     }
