@@ -5,9 +5,9 @@ import lombok.*;
 @Getter
 @Setter
 public class DefaultResponse {
-    protected int status;
+    protected String status;
 
-    public DefaultResponse(int status) {
+    public DefaultResponse(String status) {
         this.status = status;
     }
 
@@ -17,7 +17,7 @@ public class DefaultResponse {
         private Data data;
         private String msg;
 
-        public ResponseLoginUser(int status, Data data, String msg) {
+        public ResponseLoginUser(String status, Data data, String msg) {
             super(status);
             this.data = data;
             this.msg = msg;

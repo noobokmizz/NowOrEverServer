@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Transactional
 @Service
@@ -48,7 +48,7 @@ public class BucketlistService {
     }
 
     /** bucket list 에 새로운 활동을 담는 api **/
-    public int put(Bucketlist.BucketlistSingleConetents bucketlistSingleConetents){
+    public String put(Bucketlist.BucketlistSingleConetents bucketlistSingleConetents){
         try {
             LocationId locationId = new LocationId(
                     bucketlistSingleConetents.getBucketlistContents().getLc_id(),
@@ -76,34 +76,42 @@ public class BucketlistService {
             );
 
         }catch (Exception e){
-            if(e.getMessage()=="버킷리스트에 이미 존재하는 활동입니다." || e.getMessage() == "잘못된 장소, 카테고리 쌍입니다."
-            || e.getMessage()=="장소 이름이 유요하지 않습니다." || e.getMessage() == "잘못된 카테고리 분류 입니다."){
-                return 0;
-            }
+            return e.getMessage();
         }
-        return 1;
+        return "1";
     }
     /** bucket list 내의 활동 삭제 **/
-    public int delete(Bucketlist.BucketlistMultipleContetns bucketlistMultipleContetns){
-        AtomicInteger ret = new AtomicInteger();
-        for(int i = 0; i < bucketlistMultipleContetns.getBucketlistContentsList().size(); i++) {
-            BkcontentsId bkcontentsId = new BkcontentsId();
-            bkcontentsId.setMem_idnum(bucketlistMultipleContetns.getMem_idnum());
-            bkcontentsId.setBk_id(bucketlistMultipleContetns.getBk_id());
-            bkcontentsId.setLc_id(bucketlistMultipleContetns.getBucketlistContentsList().get(i).getLc_id());
-            bkcontentsId.setCategory_id(bucketlistMultipleContetns.getBucketlistContentsList().get(i).getCategory_id());
+    public String delete(Bucketlist.BucketlistMultipleContetns bucketlistMultipleContetns){
+          /** 다중 삭제 **/
+//        for(int i = 0; i < bucketlistMultipleContetns.getBucketlistContentsList().size(); i++) {
+//            BkcontentsId bkcontentsId = new BkcontentsId();
+//            bkcontentsId.setMem_idnum(bucketlistMultipleContetns.getMem_idnum());
+//            bkcontentsId.setBk_id(bucketlistMultipleContetns.getBk_id());
+//            bkcontentsId.setLc_id(bucketlistMultipleContetns.getBucketlistContentsList().get(i).getLc_id());
+//            bkcontentsId.setCategory_id(bucketlistMultipleContetns.getBucketlistContentsList().get(i).getCategory_id());
+//
+//            // 삭제하고자 하는 데이터가 존재한다면 삭제
+//            bucketlistRepository.findByPK(bkcontentsId)
+//                    .ifPresent(bkc -> bucketlistRepository.delete(bkc));
+//        }
+//        return "1";
 
-            // 삭제하고자 하는 데이터가 존재한다면 삭제
-            bucketlistRepository.findByPK(bkcontentsId)
-                    .ifPresent(
-                            bkc -> {
-                                bucketlistRepository.delete(bkc);
-                                ret.set(1);
-                            }
-                    );
-        }
-        return ret.get();
+        /** 단일 삭제 **/
+        BkcontentsId bkcontentsId = new BkcontentsId();
+        bkcontentsId.setMem_idnum(bucketlistMultipleContetns.getMem_idnum());
+        bkcontentsId.setBk_id(bucketlistMultipleContetns.getBk_id());
+        bkcontentsId.setLc_id(bucketlistMultipleContetns.getBucketlistContentsList().get(0).getLc_id());
+        bkcontentsId.setCategory_id(bucketlistMultipleContetns.getBucketlistContentsList().get(0).getCategory_id());
+
+        AtomicReference<String> status = new AtomicReference<>("존재하지 않는 활동입니다");
+        bucketlistRepository.findByPK(bkcontentsId)
+                .ifPresent(bkc-> {
+                    bucketlistRepository.delete(bkc);
+                    status.set("1");
+                });
+        return status.get();
     }
+
     /** bucket list 에 있는 활동인지 중복 검증 **/
     private void validateDuplicateAct(BkcontentsId bkcontentsId){
         try {

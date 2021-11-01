@@ -31,13 +31,13 @@ public class MemberService {
     }
 
     /** 회원 가입 **/
-    public int join(User.RequestSignUp request){
+    public String join(User.RequestSignUp request){
 
         try {
             validateDuplicateUser(request.getMem_userid());  // 중복된 회원이 있는지 검사
         }catch (Exception e){
             if(e.getMessage()=="이미 존재하는 id 입니다."){
-                return 0;
+                return e.getMessage();
             }
         }
 
@@ -78,7 +78,7 @@ public class MemberService {
 
         memberRepository.save(members); // 테이블에 새로운 멤버 정보 삽입
 
-        return 1;
+        return "1";
     }
 
     /** 로그인 **/
