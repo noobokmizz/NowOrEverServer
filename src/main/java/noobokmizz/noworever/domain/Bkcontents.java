@@ -15,13 +15,11 @@ import javax.persistence.*;
 public class Bkcontents {
     @EmbeddedId
     private BkcontentsId bkcontentsId;
-    @Nullable
     private String lc_name;
-    @Nullable
     private String category;
 
     public Bkcontents(){}
-    public Bkcontents(BkcontentsId bkcontentsId, String category, String lc_name){
+    public Bkcontents(BkcontentsId bkcontentsId, String category, @Nullable String lc_name){
         this.bkcontentsId = bkcontentsId;
         this.category = category;
         this.lc_name = lc_name;

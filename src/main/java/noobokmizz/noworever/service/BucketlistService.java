@@ -5,6 +5,7 @@ import noobokmizz.noworever.dto.Bucketlist;
 import noobokmizz.noworever.dto.LocationData;
 import noobokmizz.noworever.dto.Location_info;
 import noobokmizz.noworever.repository.BucketlistRepository;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

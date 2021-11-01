@@ -44,12 +44,12 @@ public class BucketlistController {
     @PostMapping(value = "/bucketlist/add")
     @ResponseBody
     public DefaultResponse bucketlistAdd(@RequestBody Bucketlist.BucketlistSingleConetents bucketlistSingleConetents){
-        System.out.println("mem idnum : '" + bucketlistSingleConetents.getMem_idnum() + "'");
-        System.out.println("bk_id : '" + bucketlistSingleConetents.getBk_id() + "'");
-        System.out.println("category : '" + bucketlistSingleConetents.getBucketlistContents().getCategory() + "'");
-        System.out.println("category_id : '" + bucketlistSingleConetents.getBucketlistContents().getCategory_id() + "'");
-        System.out.println("location : '" + bucketlistSingleConetents.getBucketlistContents().getLc_name() + "'");
-        System.out.println("lc_id : '" + bucketlistSingleConetents.getBucketlistContents().getLc_id() + "'");
+//        System.out.println("mem idnum : '" + bucketlistSingleConetents.getMem_idnum() + "'");
+//        System.out.println("bk_id : '" + bucketlistSingleConetents.getBk_id() + "'");
+//        System.out.println("category : '" + bucketlistSingleConetents.getBucketlistContents().getCategory() + "'");
+//        System.out.println("category_id : '" + bucketlistSingleConetents.getBucketlistContents().getCategory_id() + "'");
+//        System.out.println("location : '" + bucketlistSingleConetents.getBucketlistContents().getLc_name() + "'");
+//        System.out.println("lc_id : '" + bucketlistSingleConetents.getBucketlistContents().getLc_id() + "'");
 
         return new DefaultResponse(bucketlistService.put(bucketlistSingleConetents));
     }
@@ -58,12 +58,12 @@ public class BucketlistController {
     @PostMapping("/bucketlist/delete")
     @ResponseBody
     public DefaultResponse bucketlistDelete(@RequestBody Bucketlist.BucketlistMultipleContetns bucketlistMultipleContetns){
-        System.out.println("mem idnum : '" + bucketlistMultipleContetns.getMem_idnum() + "'");
-        System.out.println("bk_id : '" + bucketlistMultipleContetns.getBk_id() + "'");
-        System.out.println("category : '" + bucketlistMultipleContetns.getBucketlistContentsList().get(0).getCategory() + "'");
-        System.out.println("category_id : '" + bucketlistMultipleContetns.getBucketlistContentsList().get(0).getCategory_id() + "'");
-        System.out.println("location : '" + bucketlistMultipleContetns.getBucketlistContentsList().get(0).getLc_name() + "'");
-        System.out.println("lc_id : '" +bucketlistMultipleContetns.getBucketlistContentsList().get(0).getLc_id() + "'");
+//        System.out.println("mem idnum : '" + bucketlistMultipleContetns.getMem_idnum() + "'");
+//        System.out.println("bk_id : '" + bucketlistMultipleContetns.getBk_id() + "'");
+//        System.out.println("category : '" + bucketlistMultipleContetns.getBucketlistContentsList().get(0).getCategory() + "'");
+//        System.out.println("category_id : '" + bucketlistMultipleContetns.getBucketlistContentsList().get(0).getCategory_id() + "'");
+//        System.out.println("location : '" + bucketlistMultipleContetns.getBucketlistContentsList().get(0).getLc_name() + "'");
+//        System.out.println("lc_id : '" +bucketlistMultipleContetns.getBucketlistContentsList().get(0).getLc_id() + "'");
 
         return new DefaultResponse(bucketlistService.delete(bucketlistMultipleContetns));
     }
