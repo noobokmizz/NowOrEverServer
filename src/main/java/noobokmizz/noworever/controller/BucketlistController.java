@@ -46,6 +46,7 @@ public class BucketlistController {
     public DefaultResponse bucketlistAdd(@RequestBody Bucketlist.BucketlistSingleConetents bucketlistSingleConetents){
         System.out.println("mem idnum : '" + bucketlistSingleConetents.getMem_idnum() + "'");
         System.out.println("bk_id : '" + bucketlistSingleConetents.getBk_id() + "'");
+        System.out.println(bucketlistSingleConetents.getBucketlistContents().getClass());
         System.out.println("category : '" + bucketlistSingleConetents.getBucketlistContents().getCategory() + "'");
         System.out.println("category_id : '" + bucketlistSingleConetents.getBucketlistContents().getCategory_id() + "'");
         System.out.println("location : '" + bucketlistSingleConetents.getBucketlistContents().getLc_name() + "'");
