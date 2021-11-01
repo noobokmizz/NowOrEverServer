@@ -41,7 +41,7 @@ public class BucketlistController {
     }
 
     /** bucket list 에 새로운 활동을 담는 api **/
-    @RequestMapping(value = "/bucketlist/add", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    @PostMapping(value = "/bucketlist/add")
     @ResponseBody
     public DefaultResponse bucketlistAdd(@RequestBody Bucketlist.BucketlistSingleConetents bucketlistSingleConetents){
         System.out.println("mem idnum : '" + bucketlistSingleConetents.getMem_idnum() + "'");
