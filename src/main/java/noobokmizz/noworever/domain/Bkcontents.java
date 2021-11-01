@@ -2,6 +2,7 @@ package noobokmizz.noworever.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -14,7 +15,9 @@ import javax.persistence.*;
 public class Bkcontents {
     @EmbeddedId
     private BkcontentsId bkcontentsId;
+    @Nullable
     private String lc_name;
+    @Nullable
     private String category;
 
     public Bkcontents(){}

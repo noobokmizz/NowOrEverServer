@@ -2,6 +2,7 @@ package noobokmizz.noworever.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 import java.beans.ConstructorProperties;
 import java.util.List;
@@ -51,8 +52,10 @@ public class Bucketlist {
     @Setter
     public static class BucketlistContents {
         private int category_id;
+        @Nullable
         private String category;
         private String lc_id;
+        @Nullable
         private String lc_name;
 
         @ConstructorProperties({"category_id", "category", "lc_id", "lc_name"})
