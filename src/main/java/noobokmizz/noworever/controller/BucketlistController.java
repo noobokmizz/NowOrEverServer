@@ -61,6 +61,15 @@ public class BucketlistController {
         return bucketlistService.location_Rec(bucketlistContentsList, cur_x, cur_y);
     }
 
+    /** bucket list 내에 저장한 장소의 경로 api **/
+    @GetMapping("/bucketlist/path")
+    @ResponseBody
+    public List<Location> bucketlistPath(@RequestParam int mem_idnum, @RequestParam int bk_id, @RequestParam String lc_id){
+        List<Bucketlist.BucketlistContents> bucketlistContentsList =
+                bucketlistService.show(new Bucketlist(mem_idnum, bk_id)).getBucketlistContentsList();
+        return bucketlistService.location_Info(bucketlistContentsList, lc_id);
+    }
+
     /** category 목록과 category 별로 속한 location 반환 **/
     @GetMapping("/categorylist")
     @ResponseBody

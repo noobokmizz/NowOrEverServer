@@ -5,12 +5,12 @@ import noobokmizz.noworever.dto.Bucketlist;
 import noobokmizz.noworever.dto.LocationData;
 import noobokmizz.noworever.dto.Location_info;
 import noobokmizz.noworever.repository.BucketlistRepository;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Transactional
@@ -182,6 +182,20 @@ public class BucketlistService {
                         if (!location.getLocationId().getLc_id().startsWith("-") && distance(location.getLc_x(), location.getLc_y(), cur_x, cur_y) <= 500.0) {
                             locationList.add(location);
                         }
+                    });
+        }
+        return locationList;
+    }
+
+    public List<Location> location_Info(List<Bucketlist.BucketlistContents> bucketlistContentsList, String lc_id){
+        List<Location> locationList = new ArrayList<>();
+        int length = bucketlistContentsList.size();
+        for(AtomicInteger i = new AtomicInteger(); i.get() < length; i.getAndIncrement()) {
+            bucketlistRepository.findByPK(new LocationId(
+                            lc_id.replace("\n", ""), bucketlistContentsList.get(i.get()).getCategory_id()))
+                    .ifPresent( location -> {
+                        locationList.add(location);
+                        i.set(length + 1);
                     });
         }
         return locationList;
