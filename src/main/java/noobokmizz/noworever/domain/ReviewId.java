@@ -7,8 +7,7 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-public class MembersId implements Serializable {
+public class ReviewId implements Serializable {
     private int mem_idnum;
-    private String mem_userid;
-    private int bk_id;
+    private String lc_id;
 }

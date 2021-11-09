@@ -3,6 +3,7 @@ package noobokmizz.noworever.service;
 import noobokmizz.noworever.domain.*;
 import noobokmizz.noworever.dto.Bucketlist;
 import noobokmizz.noworever.dto.LocationData;
+import noobokmizz.noworever.dto.LocationResponse;
 import noobokmizz.noworever.dto.Location_info;
 import noobokmizz.noworever.repository.BucketlistRepository;
 import org.springframework.stereotype.Service;
@@ -171,36 +172,50 @@ public class BucketlistService {
     }
 
     /** bucketlistContents의 장소와 사용자의 현재 위치중 일정 거리 내에 있는 활동만 반환 **/
-    public List<Location> location_Rec(List<Bucketlist.BucketlistContents> bucketlistContentsList, String cur_x, String cur_y){
-        List<Location> locationList = new ArrayList<>();
+    public List<LocationResponse> location_Rec(List<Bucketlist.BucketlistContents> bucketlistContentsList, String cur_x, String cur_y){
+        List<LocationResponse> locationList = new ArrayList<>();
         int length = bucketlistContentsList.size();
         for(int i = 0; i < length; i++) {
+            int finalI = i;
             bucketlistRepository.findByPK(new LocationId(
                     bucketlistContentsList.get(i).getLc_id(), bucketlistContentsList.get(i).getCategory_id()))
                     .ifPresent( location -> {
                         // 카테고리만 담은 경우(lc_id가 -로 시작하는경우)를 제외하고 500m 이내에 있는 장소만 반환
                         if (!location.getLocationId().getLc_id().startsWith("-") && distance(location.getLc_x(), location.getLc_y(), cur_x, cur_y) <= 500.0) {
-                            locationList.add(location);
+                            locationList.add(new LocationResponse(location, calStarRate(bucketlistContentsList.get(finalI).getLc_id())));
                         }
                     });
         }
         return locationList;
     }
 
-    public List<Location> location_Info(List<Bucketlist.BucketlistContents> bucketlistContentsList, String lc_id){
-        List<Location> locationList = new ArrayList<>();
+    public List<LocationResponse> location_Info(List<Bucketlist.BucketlistContents> bucketlistContentsList, String lc_id){
+        List<LocationResponse> locationList = new ArrayList<>();
         int length = bucketlistContentsList.size();
         for(AtomicInteger i = new AtomicInteger(); i.get() < length; i.getAndIncrement()) {
             bucketlistRepository.findByPK(new LocationId(
                             lc_id.replace("\n", ""), bucketlistContentsList.get(i.get()).getCategory_id()))
                     .ifPresent( location -> {
-                        locationList.add(location);
+                        locationList.add(new LocationResponse(location, calStarRate(lc_id)));
                         i.set(length + 1);
                     });
         }
         return locationList;
     }
 
+    // 특정 장소의 평점 구하기
+    private double calStarRate(String lc_id){
+        List<Review> reviewList = bucketlistRepository.findByLcId(lc_id);
+        int length = reviewList.size();  // lc_id에 해당하는 장소에 리뷰가 있을때만 아래 코드 진행(평점 계산)
+        if (length > 0) {
+            int starRate = 0;
+            for (int i = 0; i < length; i++) {
+                starRate += reviewList.get(i).getRv_starrate();
+            }
+            return starRate / length * 0.1;
+        }
+        return length; // 없으면 0점 반환
+    }
     // 두 위도 경도 간의 거리 구하기
     private double distance(String lc_x, String lc_y, String cur_x, String cur_y){
         double radius = 6371; // 지구 반지름(km)

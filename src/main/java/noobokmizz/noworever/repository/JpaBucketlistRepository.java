@@ -69,4 +69,12 @@ public class JpaBucketlistRepository implements BucketlistRepository{
         return Optional.ofNullable(em.find(Category_info.class, category_infoId));
     }
 
+    @Override
+    // 특정 장소의 리뷰 목록 반환
+    public List<Review> findByLcId(String lc_id) {
+        return em.createQuery("select r from Review r where r.lc_id = :lc_id", Review.class)
+                .setParameter("lc_id", lc_id)
+                .getResultList();
+    }
+
 }

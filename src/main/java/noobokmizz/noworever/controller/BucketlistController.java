@@ -1,10 +1,7 @@
 package noobokmizz.noworever.controller;
 
 import noobokmizz.noworever.domain.Location;
-import noobokmizz.noworever.dto.Bucketlist;
-import noobokmizz.noworever.dto.CategoryAndLocationLIst;
-import noobokmizz.noworever.dto.DefaultResponse;
-import noobokmizz.noworever.dto.Location_info;
+import noobokmizz.noworever.dto.*;
 import noobokmizz.noworever.service.BucketlistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +52,7 @@ public class BucketlistController {
     /** bucket list 에서 일정 거리 내에 있는 활동들의 정보만 반환하는 api **/
     @GetMapping("/bucketlist/recommendation")
     @ResponseBody
-    public List<Location> bucketlistReco(@RequestParam int mem_idnum, @RequestParam int bk_id, @RequestParam String cur_x, @RequestParam String cur_y){
+    public List<LocationResponse> bucketlistReco(@RequestParam int mem_idnum, @RequestParam int bk_id, @RequestParam String cur_x, @RequestParam String cur_y){
         List<Bucketlist.BucketlistContents> bucketlistContentsList =
                 bucketlistService.show(new Bucketlist(mem_idnum, bk_id)).getBucketlistContentsList();
         return bucketlistService.location_Rec(bucketlistContentsList, cur_x, cur_y);
@@ -64,7 +61,7 @@ public class BucketlistController {
     /** bucket list 내에 저장한 장소의 경로 api **/
     @GetMapping("/bucketlist/path")
     @ResponseBody
-    public List<Location> bucketlistPath(@RequestParam int mem_idnum, @RequestParam int bk_id, @RequestParam String lc_id){
+    public List<LocationResponse> bucketlistPath(@RequestParam int mem_idnum, @RequestParam int bk_id, @RequestParam String lc_id){
         List<Bucketlist.BucketlistContents> bucketlistContentsList =
                 bucketlistService.show(new Bucketlist(mem_idnum, bk_id)).getBucketlistContentsList();
         return bucketlistService.location_Info(bucketlistContentsList, lc_id);
