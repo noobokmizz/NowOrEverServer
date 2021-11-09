@@ -94,6 +94,7 @@ public class MemberService {
                     members.getMem_birthday(),
                     members.getMem_email(),
                     members.getMem_password(),
+                    members.getMem_nickname(),
                     members.getBk_id(),
                     members.getBk_name()
             );
