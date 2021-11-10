@@ -9,10 +9,12 @@ import noobokmizz.noworever.domain.Location;
 public class LocationResponse {
     private Location location;
     private double rv_starrate;
+    private String category;
 
     public LocationResponse(){}
-    public LocationResponse(Location location, double rv_starrate){
+    public LocationResponse(Location location, double rv_starrate, String category){
         this.location = location;
         this.rv_starrate = rv_starrate;
+        this.category = category;
     }
 }
