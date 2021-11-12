@@ -181,7 +181,7 @@ public class BucketlistService {
                     bucketlistContentsList.get(i).getLc_id(), bucketlistContentsList.get(i).getCategory_id()))
                     .ifPresent( location -> {
                         // 카테고리만 담은 경우(lc_id가 -로 시작하는경우)를 제외하고 500m 이내에 있는 장소만 반환
-                        if (!location.getLocationId().getLc_id().startsWith("-") && distance(location.getLc_x(), location.getLc_y(), cur_x, cur_y) <= 500.0) {
+                        if (!location.getLocationId().getLc_id().startsWith("-") && distance(location.getLc_x(), location.getLc_y(), cur_x, cur_y) <= 1000.0) {
                             locationList.add(new LocationResponse(
                                     location,
                                     calStarRate(bucketlistContentsList.get(finalI).getLc_id()),
