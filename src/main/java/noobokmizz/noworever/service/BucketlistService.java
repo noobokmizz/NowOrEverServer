@@ -185,7 +185,8 @@ public class BucketlistService {
                             locationList.add(new LocationResponse(
                                     location,
                                     calStarRate(bucketlistContentsList.get(finalI).getLc_id()),
-                                    bucketlistContentsList.get(finalI).getCategory()));
+                                    bucketlistContentsList.get(finalI).getCategory(),
+                                    recLocation(bucketlistContentsList.get(finalI).getLc_id())));
                         }
                     });
         }
@@ -202,13 +203,27 @@ public class BucketlistService {
                         locationList.add(new LocationResponse(
                                 location,
                                 calStarRate(lc_id),
-                                bucketlistContentsList.get(i.get()).getCategory()));
+                                bucketlistContentsList.get(i.get()).getCategory(),
+                                recLocation(bucketlistContentsList.get(i.get()).getLc_id())
+                                ));
                         i.set(length + 1);
                     });
         }
         return locationList;
     }
 
+    // 특정 장소와 연관된 장소들 구하기
+    private List<Location> recLocation(String lc_id){
+        List<Location> locationList = new ArrayList<Location>();
+        bucketlistRepository.findByPK(lc_id)
+                .ifPresent( recommend_location -> {
+                    locationList.add(bucketlistRepository.findLocByLcId(recommend_location.getRecommend1()).get(0));
+                    locationList.add(bucketlistRepository.findLocByLcId(recommend_location.getRecommend2()).get(0));
+                    locationList.add(bucketlistRepository.findLocByLcId(recommend_location.getRecommend3()).get(0));
+                });
+
+        return locationList;
+    }
     // 특정 장소의 평점 구하기
     private double calStarRate(String lc_id){
         List<Review> reviewList = bucketlistRepository.findByLcId(lc_id);

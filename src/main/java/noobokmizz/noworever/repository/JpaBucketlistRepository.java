@@ -52,6 +52,13 @@ public class JpaBucketlistRepository implements BucketlistRepository{
     }
 
     @Override
+    public List<Location> findLocByLcId(String lc_id) {
+        return em.createQuery("select l from Location l where l.locationId.lc_id = :lc_id", Location.class)
+                .setParameter("lc_id", lc_id)
+                .getResultList();
+    }
+
+    @Override
     public List<Category_info> findAllCategory() {
         return em.createQuery("select c from Category_info as c ", Category_info.class)
                 .getResultList();
@@ -76,5 +83,11 @@ public class JpaBucketlistRepository implements BucketlistRepository{
                 .setParameter("lc_id", lc_id)
                 .getResultList();
     }
+
+    @Override
+    public Optional<Recommend_location> findByPK(String lc_id) {
+        return Optional.ofNullable(em.find(Recommend_location.class, lc_id));
+    }
+
 
 }
