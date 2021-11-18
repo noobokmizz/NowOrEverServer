@@ -11,12 +11,12 @@ import java.util.List;
 @Setter
 public class LocationResponse {
     private Location location;
-    private double rv_starrate;
+    private String rv_starrate;
     private String category;
     private List<Location> recommendList;
 
     public LocationResponse(){}
-    public LocationResponse(Location location, double rv_starrate, String category, List<Location> locationList){
+    public LocationResponse(Location location, String rv_starrate, String category, List<Location> locationList){
         this.location = location;
         this.rv_starrate = rv_starrate;
         this.category = category;

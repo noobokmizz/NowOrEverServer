@@ -9,6 +9,7 @@ import noobokmizz.noworever.repository.BucketlistRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -225,7 +226,8 @@ public class BucketlistService {
         return locationList;
     }
     // 특정 장소의 평점 구하기
-    private double calStarRate(String lc_id){
+    private String calStarRate(String lc_id){
+        DecimalFormat form = new DecimalFormat("#.##"); // 소수점 아래 두자리만 표현
         List<Review> reviewList = bucketlistRepository.findByLcId(lc_id);
         int length = reviewList.size();  // lc_id에 해당하는 장소에 리뷰가 있을때만 아래 코드 진행(평점 계산)
         if (length > 0) {
@@ -233,9 +235,9 @@ public class BucketlistService {
             for (int i = 0; i < length; i++) {
                 starRate += reviewList.get(i).getRv_starrate();
             }
-            return starRate / length * 0.1;
+            return form.format(starRate / length * 0.1);
         }
-        return length; // 없으면 0점 반환
+        return "0.00"; // 없으면 0점 반환
     }
     // 두 위도 경도 간의 거리 구하기
     private double distance(String lc_x, String lc_y, String cur_x, String cur_y){
