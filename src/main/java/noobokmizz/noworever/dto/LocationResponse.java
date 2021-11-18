@@ -15,7 +15,6 @@ public class LocationResponse {
     private String category;
     private List<Location> recommendList;
 
-    public LocationResponse(){}
     public LocationResponse(Location location, String rv_starrate, String category, List<Location> locationList){
         this.location = location;
         this.rv_starrate = rv_starrate;

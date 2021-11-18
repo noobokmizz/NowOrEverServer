@@ -25,6 +25,7 @@ public class Location {
     private String lc_url;
 
 
+
     @Getter
     @Setter
     public static class ResponseLocation extends Location {

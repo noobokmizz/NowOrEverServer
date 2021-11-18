@@ -181,7 +181,8 @@ public class BucketlistService {
             bucketlistRepository.findByPK(new LocationId(
                     bucketlistContentsList.get(i).getLc_id(), bucketlistContentsList.get(i).getCategory_id()))
                     .ifPresent( location -> {
-                        // 카테고리만 담은 경우(lc_id가 -로 시작하는경우)를 제외하고 500m 이내에 있는 장소만 반환
+                        System.out.print("@@@ location name : " + bucketlistContentsList.get(finalI).getLc_name());
+                        // 카테고리만 담은 경우(lc_id가 -로 시작하는경우)를 제외하고 1km 이내에 있는 장소만 반환
                         if (!location.getLocationId().getLc_id().startsWith("-") && distance(location.getLc_x(), location.getLc_y(), cur_x, cur_y) <= 1000.0) {
                             locationList.add(new LocationResponse(
                                     location,
@@ -189,6 +190,7 @@ public class BucketlistService {
                                     bucketlistContentsList.get(finalI).getCategory(),
                                     recLocation(bucketlistContentsList.get(finalI).getLc_id())));
                         }
+                        System.out.println(" @@@");
                     });
         }
         return locationList;
@@ -257,6 +259,7 @@ public class BucketlistService {
                 sinDeltaLat * sinDeltaLat +
                         Math.cos(src_x * toRadian) * Math.cos(des_x * toRadian) * sinDeltaLng * sinDeltaLng);
 
+        System.out.print(" , distance is : " + 2 * radius * Math.asin(squareRoot) * 1000);
         return 2 * radius * Math.asin(squareRoot) * 1000;
     }
 }
