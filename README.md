@@ -10,9 +10,10 @@
   - AWS EC2
   - AWS RDS
   - MySQL
-
-
-
+  
+  
+  
+*(수정 예정)
 ```bash
 ├── data
 │   ├── train
