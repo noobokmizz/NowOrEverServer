@@ -12,17 +12,25 @@
   - MySQL
   - 
 
-
-.
-├── dir1  
-│   ├── file11.ext  
-│   └── file12.ext  
-├── dir2  
-│   ├── file21.ext  
-│   ├── file22.ext  
-│   └── file23.ext  
-├── dir3  
-├── file_in_root.ext  
-└── README.md  
-
-3 directories, 7 files  
+```mermaid
+classDiagram
+      Animal <|-- Duck
+      Animal <|-- Fish
+      Animal <|-- Zebra
+      Animal : +int age
+      Animal : +String gender
+      Animal: +isMammal()
+      Animal: +mate()
+      class Duck{
+          +String beakColor
+          +swim()
+          +quack()
+      }
+      class Fish{
+          -int sizeInFeet
+          -canEat()
+      }
+      class Zebra{
+          +bool is_wild
+          +run()
+      }
