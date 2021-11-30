@@ -7,6 +7,7 @@
 - 프로젝트 구조 : Image 첨부예정
 - 팀원 : 3명
 - 프로젝트 기간 : 2021.03.01 ~ 2021.11.26 
+- 사용 기술 : React-Native, Spring Boot, JPA, Mybatis, MySQL, AWS EC2, AWS RDS, Java, Python, JS
 - 맡은 파트 : Rest API 서버 개발
 
 - Used Language
