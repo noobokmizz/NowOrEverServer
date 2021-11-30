@@ -1,4 +1,4 @@
-# Project Name : <strong>NowOrEver</strong> 📝  
+# Project Name : <strong><span style="color:skyblue">NowOrEver</span></strong> 📝  
 - 프로젝트 개요 : 🙋‍♂️학부 졸업프로젝트로 진행한 모바일 앱 제작 프로젝트  
 - 프로젝트 설명 :  
    1. 사용자가 방문하고 싶은 장소나 경험하고 싶은 활동을 앱에 저장 📂  
