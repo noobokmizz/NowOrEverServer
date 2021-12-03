@@ -32,7 +32,7 @@
 # Project tree
 .
  * [controller](./dir2)
-   * [BucketlistController](NowOrEverServer/src/main/java/noobokmizz/noworever/controller/BucketlistController.java)
+   * [BucketlistController](/src/main/java/noobokmizz/noworever/controller/BucketlistController.java)
    * [MemberController](./dir2/file22.ext)
  * [domain](./dir1)
    * [BKcontents](./dir1/file11.ext)
