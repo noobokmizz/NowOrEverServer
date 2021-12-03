@@ -1,4 +1,5 @@
 # *Project Name* : **NowOrEver** 📝  
+![앱 이미지](./image/app_images.png)
 - 프로젝트 개요 : 🙋‍♂️학부 졸업프로젝트로 진행한 모바일 앱 제작 프로젝트  
 - 프로젝트 설명 :  
    1. 사용자가 방문하고 싶은 장소나 경험하고 싶은 활동을 앱에 저장 📂  
@@ -23,22 +24,20 @@
   
    
    
- ## Spring Boot Project 구조
+ # Spring Boot Project 구조
  ![Spring Boot 구조](./image/springboot_structure.png)  
  
   
-$ ./tree-md .
+  
 # Project tree
 
 .
- * [tree-md](./tree-md)
- * [dir2](./dir2)
-   * [file21.ext](./dir2/file21.ext)
-   * [file22.ext](./dir2/file22.ext)
-   * [file23.ext](./dir2/file23.ext)
- * [dir1](./dir1)
-   * [file11.ext](./dir1/file11.ext)
-   * [file12.ext](./dir1/file12.ext)
- * [file_in_root.ext](./file_in_root.ext)
- * [README.md](./README.md)
- * [dir3](./dir3)
+ * [controller](./dir2)
+   * [BucketlistController](./dir2/file21.ext)
+   * [MemberController](./dir2/file22.ext)
+ * [domain](./dir1)
+   * [BKcontents](./dir1/file11.ext)
+   * [Category_info](./dir1/file12.ext)
+ * [dto](./file_in_root.ext)
+ * [repository](./README.md)
+ * [service](./dir3)
