@@ -9,7 +9,7 @@
 ![프로젝트 구조](./image/project_structure.png)  
 - 팀원 : 3명
 - 프로젝트 기간 : 2021.03.01 ~ 2021.11.26 
-- 맡은 파트 : Rest API 서버 개발
+- 맡은 파트 : 데이터베이스 설계 및 구축, API 서버 개발, 스프링부트 프로젝트 리팩토링
 - 시연 영상 : youtube 링크걸기
 - 기술 스택  
    - Used Language
@@ -32,7 +32,7 @@
 # Project tree
 .
  * [controller](/src/main/java/noobokmizz/noworever/controller)
-   * [BucketlistController](/src/main/java/noobokmizz/noworever/controller/BucketlistController.java)
+   * [BucketlistController](/src/main/java/noobokmizz/noworever/controller/BucketlistController.java) Bucketlist에 관한 요청을 처리
    * [MemberController](/src/main/java/noobokmizz/noworever/controller/MemberController.java)
  * [domain](/src/main/java/noobokmizz/noworever/domain)
    * [BKcontents](/src/main/java/noobokmizz/noworever/domain/Bkcontents.java)
