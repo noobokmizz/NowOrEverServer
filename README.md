@@ -17,6 +17,7 @@
    - Used Tech
       - Spring Boot
       - JPA
+      - Gradle
    - Infra
       - AWS EC2
       - AWS RDS  
