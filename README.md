@@ -28,14 +28,33 @@
  
   
 ```bash
-├── data
-│   ├── train
-│   ├── test
-│   └── validation
-├── code
-│   ├── train.py
-│   ├── classify.py
-│   ├── model.py
-│   └── dataset.py
+├── noobokmizz.noworever
+│   ├── controller
+│   │   ├── BucketlistController
+│   │   ├── MemberController
+│   ├── domain
+│   │   ├── BKcontents
+│   │   ├── Category_info
+│   │   ├── Location
+│   │   ├── Members
+│   │   ├── Recommend_location
+│   │   └── Review
+│   ├── dto
+│   │   ├── Bucketlist
+│   │   ├── CategoryAndLocationList
+│   │   ├── Data
+│   │   ├── DefaultResponse
+│   │   ├── Location_info
+│   │   ├── LocationData
+│   │   ├── LocationResponse
+│   │   └── User
+│   ├── repository
+│   │   ├── BucketlistRepository
+│   │   ├── JpaBucketlistRepository
+│   │   ├── MemberRepository
+│   │   └── JpaMemberRepository
+│   └── service
+│   │   ├── BucketlistService
+│   │   └── MemberService
 └── run.sh
 ``` 
