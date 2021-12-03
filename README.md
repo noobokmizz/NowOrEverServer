@@ -20,7 +20,8 @@
       - AWS EC2
       - AWS RDS  
   
-  
+ 
+ ## Spring Boot Project 구조
  ![Spring Boot 구조](./image/springboot_structure.png)  
 *수정 예정*  
   
