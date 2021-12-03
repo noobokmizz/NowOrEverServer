@@ -27,34 +27,18 @@
  ![Spring Boot 구조](./image/springboot_structure.png)  
  
   
-```bash
-├── noobokmizz.noworever
-│   ├── controller
-│   │   ├── BucketlistController
-│   │   ├── MemberController
-│   ├── domain
-│   │   ├── BKcontents
-│   │   ├── Category_info
-│   │   ├── Location
-│   │   ├── Members
-│   │   ├── Recommend_location
-│   │   └── Review
-│   ├── dto
-│   │   ├── Bucketlist
-│   │   ├── CategoryAndLocationList
-│   │   ├── Data
-│   │   ├── DefaultResponse
-│   │   ├── Location_info
-│   │   ├── LocationData
-│   │   ├── LocationResponse
-│   │   └── User
-│   ├── repository
-│   │   ├── BucketlistRepository
-│   │   ├── JpaBucketlistRepository
-│   │   ├── MemberRepository
-│   │   └── JpaMemberRepository
-│   └── service
-│   │   ├── BucketlistService
-│   │   └── MemberService
-└── run.sh
-``` 
+$ ./tree-md .
+# Project tree
+
+.
+ * [tree-md](./tree-md)
+ * [dir2](./dir2)
+   * [file21.ext](./dir2/file21.ext)
+   * [file22.ext](./dir2/file22.ext)
+   * [file23.ext](./dir2/file23.ext)
+ * [dir1](./dir1)
+   * [file11.ext](./dir1/file11.ext)
+   * [file12.ext](./dir1/file12.ext)
+ * [file_in_root.ext](./file_in_root.ext)
+ * [README.md](./README.md)
+ * [dir3](./dir3)
