@@ -52,7 +52,7 @@
    * [Review](/src/main/java/noobokmizz/noworever/domain/Review.java) : 장소에 관한 리뷰 정보
    * [Members](/src/main/java/noobokmizz/noworever/domain/Members.java) : 회원에 관한 정보
 *************
- * [dto](/src/main/java/noobokmizz/noworever/dto) : 테이블에서 필요한 칼럼만 가져온뒤, 계층간 전송 혹은 반환하는데 사용
+ * [dto](/src/main/java/noobokmizz/noworever/dto) : domain에서 필요한 칼럼만 가져온뒤, 계층간 전송 혹은 클라이언트에 반환할 때 사용
    * [Bucketlist](/src/main/java/noobokmizz/noworever/dto/Bucketlist.java)
    * [BucketlistInfo](/src/main/java/noobokmizz/noworever/dto/BucketlistInfo.java)
    * [CategoryAndLocationList](/src/main/java/noobokmizz/noworever/dto/CategoryAndLocationLIst.java)
