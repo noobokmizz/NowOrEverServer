@@ -9,17 +9,16 @@
 - 프로젝트 기간 : 2021.03.01 ~ 2021.11.26 
 - 맡은 파트 : Rest API 서버 개발
 - 시연 영상 : youtube 링크걸기
-- 
-- Used Language
-  - Java
-  - MySQL
-- Used Tech
-  - Spring Boot
-  - JPA
-  - Gradle
-- Infra
-  - AWS EC2
-  - AWS RDS  
+- 기술 스택  
+   - Used Language
+      - Java
+      - MySQL
+   - Used Tech
+      - Spring Boot
+      - JPA
+   - Infra
+      - AWS EC2
+      - AWS RDS  
   
   
   
